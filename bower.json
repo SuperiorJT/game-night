@@ -1,0 +1,22 @@
+{
+  "name": "game-night",
+  "description": "",
+  "main": "main.js",
+  "authors": [
+    "SuperiorJT"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/SuperiorJT/game-night",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4"
+  }
+}
