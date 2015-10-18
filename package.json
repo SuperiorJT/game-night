@@ -1,7 +1,6 @@
 {
   "name": "game-night",
   "version": "1.0.0",
-  "description": "",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +14,12 @@
   "bugs": {
     "url": "https://github.com/SuperiorJT/game-night/issues"
   },
-  "homepage": "https://github.com/SuperiorJT/game-night#readme"
+  "homepage": "https://github.com/SuperiorJT/game-night#readme",
+  "dependencies": {
+    "bcrypt": "^0.8.5",
+    "express": "^4.13.3",
+    "socket.io": "^1.3.7"
+  },
+  "devDependencies": {},
+  "description": ""
 }
