@@ -24,6 +24,11 @@ client.on('connect', function() {
             client.set('session:gen-id', 1);
         }
     });
+    client.exists('game:gen-id', function(err, reply) {
+        if (!reply) {
+            client.set('game:gen-id', 1);
+        }
+    });
     client.keys('*', function(err, replies) {
         console.log(replies);
     });

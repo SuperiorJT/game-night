@@ -18,7 +18,15 @@ module.exports.existsForUsername = function(name, callback) {
 
 module.exports.create = function(user, callback) {
     client.get('user:gen-id', function(err, reply) {
+        if (err) {
+            callback(err, false);
+            return;
+        }
         bcrypt.hash(user.password, 10, function(err, hash) {
+            if (err) {
+                callback(err, false);
+                return;
+            }
             client.hmset('user:' + reply, {
                 "username": user.username,
                 "password": hash,
@@ -33,25 +41,30 @@ module.exports.create = function(user, callback) {
                 "username": user.username
             })]);
             client.incr('user:gen-id');
-            callback();
+            callback(null, reply);
         });
     });
 };
 
 module.exports.changePassword = function(data, callback) {
     client.hget('user:' + data.id, 'password', function(err, reply) {
+        if (err) {
+            callback(err, false);
+            return;
+        }
         bcrypt.compare(data.oldPass, reply, function(err, res) {
             if (err) {
-                callback(false);
+                callback(err, false);
+                return;
             }
             if (res) {
                 bcrypt.hash(data.newPass, 10, function(err, hash) {
                     client.hset('user:' + data.id, 'password', hash, function() {
-                        callback(true);
+                        callback(null, true);
                     });
                 });
             } else {
-                callback(false);
+                callback(null, false);
             }
         });
     });

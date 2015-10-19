@@ -1,11 +1,11 @@
-var pass = {
-    "error": false,
-    "msg": "call successful"
-};
+function pass() {
+    this.error = false;
+    this.msg = "call successful";
+}
 
-var err = {
-    "error": true,
-    "msg": "call unsuccessful"
+function err (){
+    this.error = true;
+    this.msg = "call unsuccessful";
 };
 
 var replaceResponseValues = function(val, msg, data) {
@@ -21,11 +21,11 @@ var replaceResponseValues = function(val, msg, data) {
 var format = {};
 
 format.success = function(msg, data) {
-    return replaceResponseValues(pass, msg, data);
+    return replaceResponseValues(new pass(), msg, data);
 };
 
 format.fail = function(msg, data) {
-    return replaceResponseValues(err, msg, data);
+    return replaceResponseValues(new err(), msg, data);
 };
 
 module.exports = format;
