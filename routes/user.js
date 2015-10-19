@@ -34,4 +34,15 @@ router.post('/login', function(req, res) {
     });
 });
 
+router.put('/change-password', function(req, res) {
+    var data = req.body;
+    users.changePassword(data, function(valid) {
+        if (valid) {
+            res.status(200).json(format.success("password changed!", null));
+        } else {
+            res.status(400).json(format.fail("old password does not match current.", null));
+        }
+    });
+});
+
 module.exports = router;

@@ -38,9 +38,24 @@ module.exports.create = function(user, callback) {
     });
 };
 
-module.exports.changePassword = function(password, id, callback) {
-    client.hset('user:' + id, "password", password, callback);
-}
+module.exports.changePassword = function(data, callback) {
+    client.hget('user:' + data.id, 'password', function(err, reply) {
+        bcrypt.compare(data.oldPass, reply, function(err, res) {
+            if (err) {
+                callback(false);
+            }
+            if (res) {
+                bcrypt.hash(data.newPass, 10, function(err, hash) {
+                    client.hset('user:' + data.id, 'password', hash, function() {
+                        callback(true);
+                    });
+                });
+            } else {
+                callback(false);
+            }
+        });
+    });
+};
 
 module.exports.login = function(password, id, callback) {
     client.hget('user:' + id, "password", function(err, reply) {
