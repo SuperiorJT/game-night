@@ -4,15 +4,13 @@ var bodyParser = require('body-parser');
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var client = require('./helpers/db');
-var register = require('./routes/register');
-var login = require('./routes/login');
+var userRoute = require('./routes/user');
 
 app.use(express.static('public'));
 
 app.use(bodyParser.json());
 
-app.use('/api/register', register);
-app.use('/api/login', login);
+app.use('/api/user/', userRoute);
 
 client.on('connect', function() {
     console.log('connected to redis server');

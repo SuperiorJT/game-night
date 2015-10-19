@@ -23,7 +23,9 @@ module.exports.create = function(user, callback) {
                 "username": user.username,
                 "password": hash,
                 "admin": false,
-                "games": JSON.stringify([]),
+                "exp": 0,
+                "rank": 0,
+                "skill": JSON.stringify([]),
                 "sessions": JSON.stringify([])
             });
             client.sadd(['users', JSON.stringify({
@@ -36,9 +38,12 @@ module.exports.create = function(user, callback) {
     });
 };
 
+module.exports.changePassword = function(password, id, callback) {
+    client.hset('user:' + id, "password", password, callback);
+}
+
 module.exports.login = function(password, id, callback) {
     client.hget('user:' + id, "password", function(err, reply) {
-        console.log(password + "\n" + reply);
         bcrypt.compare(password, reply, function(err, res) {
             if (err) {
                 callback(false);
