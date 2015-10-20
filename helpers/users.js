@@ -28,6 +28,7 @@ module.exports.create = function(user, callback) {
                 return;
             }
             client.hmset('user:' + reply, {
+                "id": reply,
                 "username": user.username,
                 "password": hash,
                 "admin": false,

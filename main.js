@@ -3,7 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-require('./helpers/socket-connect')(io);
+require('./helpers/socket-bootstrap')(io);
 var client = require('./helpers/db');
 var userRoute = require('./routes/user');
 
