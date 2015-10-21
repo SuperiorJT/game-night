@@ -24,7 +24,9 @@ module.exports.init = function(conn) {
         });
     });
 
-    conn.socket.on('request games', function() {
+
+
+    conn.socket.on('fetch games', function() {
         var multi = client.multi();
         client.get('game:gen-id', function(err, reply) {
             if (err) {

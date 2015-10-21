@@ -30,9 +30,19 @@ client.on('connect', function() {
             client.set('game:gen-id', 1);
         }
     });
-    client.keys('*', function(err, replies) {
-        console.log(replies);
+    client.exists('session:gen-id', function(err, reply) {
+        if (!reply) {
+            client.set('session:gen-id', 1);
+        }
     });
+    client.exists('round:gen-id', function(err, reply) {
+        if (!reply) {
+            client.set('round:gen-id', 1);
+        }
+    });
+    // client.keys('*', function(err, replies) {
+    //     console.log(replies);
+    // });
 });
 
 server.listen(3000, function() {

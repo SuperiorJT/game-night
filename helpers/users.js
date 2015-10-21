@@ -1,5 +1,7 @@
 var client = require('../helpers/db');
 var bcrypt = require('bcrypt');
+var format = require('./response-format');
+var cache = require('./cache');
 
 module.exports.existsForUsername = function(name, callback) {
     client.smembers('users', function(err, reply) {
@@ -82,3 +84,17 @@ module.exports.login = function(password, id, callback) {
         });
     });
 };
+
+module.exports.checkStatus = function(id, callback) {
+    var userFound = false;
+    cache.users.some(function(user) {
+        if (user.id == id) {
+            userFound = true;
+            callback(format.success(user));
+        }
+        return userFound;
+    });
+    if (!userFound) {
+        callback(format.fail("This account is not logged in!", null));
+    }
+}

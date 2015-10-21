@@ -1,4 +1,10 @@
 var games = require('./games/games-io');
+var sessions = require('./sessions/sessions-io');
+var rounds = require('./rounds/rounds-io');
+var roundFuncs = require('./rounds/rounds');
+var notify = require('./socket-notifications');
+var client = require('./db');
+var cache = require('./cache');
 
 module.exports = function(io) {
     io.on('connection', function(socket) {
@@ -7,13 +13,40 @@ module.exports = function(io) {
             "socket": socket
         };
         console.log(socket.request.connection.remoteAddress + " has connected to the server.");
-        socket.on('login', function(username) {
-            console.log(username + " has joined the server!");
-            io.emit('user joined server', username + " joined the game night server!");
+        socket.on('login', function(id) {
+            client.hgetall('user:' + id, function(err, reply) {
+                reply.id = id;
+                reply.skill = JSON.parse(reply.skill);
+                reply.sessions = JSON.parse(reply.sessions);
+                reply.sid = socket.id;
+                cache.users.push(reply);
+                console.log(reply.username + " has joined the server!");
+                socket.emit('logged in', reply.admin);
+                notify.success(io, reply.username + " joined the game night server!", null);
+            });
+        });
+
+        socket.on('disconnect', function() {
+            cache.users.some(function(user) {
+                if (user.sid == socket.id) {
+                    cache.users = cache.users.filter(function(val) {
+                        return val.id != user.id;
+                    });
+                    console.log(user.username + " has left the server!");
+                    io.emit('users updated', user.username + "left the game night server!");
+                    return true;
+                }
+            });
+        });
+
+        socket.on('fetch users', function() {
+            conn.socket.to('session room ' + cache.session.id).emit('receive users', cache.users);
         });
 
         // Modules to be bootstrapped must be initialized below
 
+        sessions.init(conn);
+        rounds.init(conn);
         games.init(conn);
 
     });
