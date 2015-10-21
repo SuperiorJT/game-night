@@ -36,20 +36,30 @@ module.exports.join = function(data, callback) {
     if (!cache.session.id) {
         callback(format.fail("Session must be started before joining one", null));
     } else {
-        if (cache.session.attendees.indexOf(data.id) == -1) {
-            cache.session.attendees.push(data.id);
-        }
-        callback(true);
+        users.checkStatus(data.id, function(reply) {
+            if (reply.error) {
+                callback(reply);
+            } else {
+                if (cache.session.attendees.indexOf(data.id) == -1) {
+                    cache.session.attendees.push(data.id);
+                }
+                users.updateState(reply.idea, cache.session.id, null);
+                callback(true);
+            }
+        });
     }
-}
+};
 
 module.exports.end = function(data, callback) {
     if (!cache.session.id) {
         callback(format.fail("Session must be started before ending one", null));
     } else {
+        cache.session.attendees.forEach(function(val) {
+            client.hset('user:' + val, 'session', 0);
+        });
         client.hset('session:' + data.id, 'attendees', JSON.stringify(cache.session.attendees));
         client.hset('session:' + data.id, 'rounds', JSON.stringify(cache.session.rounds));
         cache.session = {};
         callback(true);
     }
-}
+};

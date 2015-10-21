@@ -55,15 +55,8 @@ module.exports.join = function(data, callback) {
                         } else if (reply.lobby) {
                             callback(format.fail("You are already in a lobby!", null));
                         } else {
-                            var users = cache.rounds[index].users;
-                            users.push(data.id);
-                            cache.rounds[index].users = users;
-                            cache.users.some(function(user, index, array) {
-                                if (data.id == user.id) {
-                                    array[index].lobby = round.id;
-                                }
-                            });
-                            reply.lobby = round.id;
+                            cache.rounds[index].users.push(data.id);
+                            users.updateState(data.id, null, round.id);
                             client.hset('round:' + data.round, 'users', JSON.stringify(users));
                             callback(true);
                         }
@@ -86,23 +79,15 @@ module.exports.leave = function(data, callback) {
         cache.rounds.some(function(round, index, array) {
             if (round.id == data.round) {
                 roundFound = true;
-                var users = array[index].users;
                 var userFound = false;
-                users.some(function(user, userIndex) {
+                cache.rounds[index].users.some(function(user, userIndex) {
                     if (user == data.id) {
                         userFound = true;
-                        users = users.filter(function(val) {
+                        cache.rounds[index].users = cache.rounds[index].users.filter(function(val) {
                             return val.id != user.id;
                         });
-                        cache.rounds[index].users = users;
                         client.hset('round:' + data.round, 'users', JSON.stringify(users));
-                        cache.users.some(function(val, index, array) {
-                            if (user == val.id) {
-                                cache.users[index].lobby = null;
-                                return true;
-                            }
-                            return false;
-                        });
+                        users.updateState(data.id, null, 0);
                         callback(true);
                     }
                     return userFound;
@@ -197,10 +182,12 @@ module.exports.declareWinners = function(data, callback) {
                 if (cache.session.rounds.indexOf(data.round) == -1) {
                     cache.session.rounds.push(data.round);
                 }
+                round.users.forEach(function(val) {
+                    users.updateState(val, null, 0);
+                });
                 cache.rounds = cache.rounds.filter(function(val) {
                     return val.id != round.id;
                 });
-                updateStats(round);
                 callback(round);
             }
             return roundFound;
@@ -220,6 +207,9 @@ module.exports.close = function(data, callback) {
             if (round.id == data.round) {
                 roundFound = true;
                 client.del('round:' + round.id);
+                round.users.forEach(function(val) {
+                    users.updateState(val, null, 0);
+                });
                 cache.rounds = cache.rounds.filter(function(val) {
                     return val.id != round.id;
                 });
@@ -233,7 +223,7 @@ module.exports.close = function(data, callback) {
     }
 };
 
-var updateStats = function(round) {
+module.exports.updateStats = function(round, callback) {
     var length = round.endTime - round.startTime;
     var expTimeMultiplier = length / 100000;
     var expWinMultiplier = 1.25;
@@ -241,7 +231,7 @@ var updateStats = function(round) {
     var bonusExpMultiplier = 1;
     client.hgetall('exp', function(err, reply) {
         if (err) {
-            throw err;
+            callback(err, false);
         }
         baseExpReward = reply.base;
         bonusExpMultiplier = reply.bonus;
@@ -249,12 +239,20 @@ var updateStats = function(round) {
         round.users.forEach(function(id) {
             client.hget('user:' + id, 'exp', function(err, reply) {
                 if (err) {
-                    throw err;
+                    callback(err, false);
                 } else {
                     reply += baseExpReward * bonusExpMultiplier * expTimeMultiplier;
                     if (round.winners.indexOf(id) != -1) {
-                        reply = reply * 1.25;
+                        reply = reply * expWinMultiplier;
                     }
+                    cache.users.some(function(val, index) {
+                        if (val.id == id) {
+                            cache.users[index].exp = reply;
+                            callback(null, val);
+                            return true;
+                        }
+                        return false;
+                    });
                     client.hset('user:' + id, 'exp', reply);
                 }
             });

@@ -114,6 +114,9 @@ module.exports.init = function(conn) {
     });
 
     conn.socket.on('round claim', function(data) {
+        users.checkStatus(data.id, function(reply) {
+
+        });
         rounds.claimVictory(data, function(reply) {
             if (reply.error) {
                 notify.fail(conn.socket, reply.msg, reply.data);
@@ -134,6 +137,12 @@ module.exports.init = function(conn) {
             } else {
                 client.hgetall('round:' + data.round, function(err, reply) {
                     conn.io.to('session room ' + cache.session.id).emit('round closed', reply);
+                    updateStats(reply, function(err, user) {
+                        if (err) {
+                            throw err;
+                        }
+                        conn.io.sockets[user.sid].emit('exp update', user);
+                    });
                 });
             }
         });

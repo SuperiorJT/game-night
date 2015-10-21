@@ -16,6 +16,9 @@
     "test",
     "tests"
   ],
+  "install": {
+    "path": "public/components"
+  },
   "dependencies": {
     "jquery": "~2.1.4"
   }

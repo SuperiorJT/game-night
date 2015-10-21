@@ -3,9 +3,10 @@ var socket = io();
 var state = {
     online : false,
     admin : false,
-    session : {},
+    session : null,
     games : [],
-    rounds : []
+    rounds : [],
+    round : null
 };
 
 var transition = {
@@ -53,6 +54,20 @@ socket.on('connect', function() {
     socket.on('notification', function(data) {
         console.log(data.msg);
     });
+    socket.on('reconnect', function() {
+        if (localStorage.userID) {
+            socket.emit('login', localStorage.userID);
+            if (state.session) {
+                socket.emit('fetch all')
+                socket.emit('session join', {
+                    id: localStorage.userID
+                });
+                if (state.round) {
+
+                }
+            }
+        }
+    })
 });
 
 // socket.emit('create game', {

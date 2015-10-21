@@ -97,4 +97,21 @@ module.exports.checkStatus = function(id, callback) {
     if (!userFound) {
         callback(format.fail("This account is not logged in!", null));
     }
-}
+};
+
+module.exports.updateState = function(id, sessionId, lobbyId) {
+    cache.users.some(function(val, index, array) {
+        if (id == val.id) {
+            if (lobbyId != null) {
+                cache.users[index].lobby = lobbyId;
+                client.hset('user:' + id, 'lobby', lobbyId);
+            }
+            if (sessionId != null) {
+                cache.users[index].session = sessionId;
+                client.hset('user:' + id, 'session', sessionId);
+            }
+            return true;
+        }
+        return false;
+    });
+};

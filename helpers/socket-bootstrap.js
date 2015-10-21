@@ -12,13 +12,14 @@ module.exports = function(io) {
             "io": io,
             "socket": socket
         };
-        console.log(socket.request.connection.remoteAddress + " has connected to the server.");
+        console.log(socket.request.connection.remoteAddress + " has connected to the server. id: " + socket.id);
         socket.on('login', function(id) {
             client.hgetall('user:' + id, function(err, reply) {
                 reply.id = id;
                 reply.skill = JSON.parse(reply.skill);
                 reply.sessions = JSON.parse(reply.sessions);
                 reply.sid = socket.id;
+                reply.password = undefined;
                 cache.users.push(reply);
                 console.log(reply.username + " has joined the server!");
                 socket.emit('logged in', reply.admin);
@@ -27,6 +28,7 @@ module.exports = function(io) {
         });
 
         socket.on('disconnect', function() {
+            console.log(socket.request.connection.remoteAddress + " has disconnected to the server. id: " + socket.id);
             cache.users.some(function(user) {
                 if (user.sid == socket.id) {
                     cache.users = cache.users.filter(function(val) {
@@ -39,8 +41,12 @@ module.exports = function(io) {
             });
         });
 
+        socket.on('reconnect', function() {
+            console.log(socket.request.connection.remoteAddress + " has reconnected to the server. id: " + socket.id);
+        });
+
         socket.on('fetch users', function() {
-            conn.socket.to('session room ' + cache.session.id).emit('receive users', cache.users);
+            socket.to('session room ' + cache.session.id).emit('receive users', cache.users);
         });
 
         // Modules to be bootstrapped must be initialized below
