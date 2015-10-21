@@ -200,7 +200,7 @@ module.exports.declareWinners = function(data, callback) {
                 cache.rounds = cache.rounds.filter(function(val) {
                     return val.id != round.id;
                 });
-                updateStats()
+                updateStats(round);
                 callback(round);
             }
             return roundFound;
@@ -233,7 +233,7 @@ module.exports.close = function(data, callback) {
     }
 };
 
-var updateStats = function(round, gameID) {
+var updateStats = function(round) {
     var length = round.endTime - round.startTime;
     var expTimeMultiplier = length / 100000;
     var expWinMultiplier = 1.25;
