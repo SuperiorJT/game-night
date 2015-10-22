@@ -15,15 +15,22 @@ module.exports = function(io) {
         console.log(socket.request.connection.remoteAddress + " has connected to the server. id: " + socket.id);
         socket.on('login', function(id) {
             client.hgetall('user:' + id, function(err, reply) {
-                reply.id = id;
-                reply.skill = JSON.parse(reply.skill);
-                reply.sessions = JSON.parse(reply.sessions);
-                reply.sid = socket.id;
-                reply.password = undefined;
-                cache.users.push(reply);
-                console.log(reply.username + " has joined the server!");
-                socket.emit('logged in', reply.admin);
-                notify.success(io, reply.username + " joined the game night server!", null);
+                if (err) {
+                    throw err;
+                }
+                if (reply) {
+                    reply.id = id;
+                    reply.skill = JSON.parse(reply.skill);
+                    reply.sessions = JSON.parse(reply.sessions);
+                    reply.sid = socket.id;
+                    reply.password = undefined;
+                    cache.users.push(reply);
+                    console.log(reply.username + " has joined the server!");
+                    socket.emit('logged in', reply.admin);
+                    notify.success(io, reply.username + " joined the game night server!", null);
+                } else {
+                    notify.fail(socket, "Your local account data is invalid. Please login again.", null);
+                }
             });
         });
 

@@ -24,7 +24,7 @@ router.post('/login', function(req, res) {
         if (taken) {
             users.login(user.password, id, function(valid) {
                 if (valid) {
-                    res.status(200).json(format.success("successfully logged in!", id));
+                    res.status(200).json(format.success("successfully logged in!", parseInt(id)));
                 } else {
                     res.status(400).json(format.fail("username or password is incorrect.", null));
                 }
