@@ -11,8 +11,21 @@ var state = {
 
 var transition = {
 
-    login: function() {
+    loginTo: function() {
+        $(".login")
+        .css("display", "flex")
+        .hide()
+        .fadeIn();
+        console.log("transition complete");
+    },
+
+    loginFrom: function() {
         console.log("login transition");
+        $('.login').fadeOut('fast', function() {
+            $('.pre-session').fadeIn('fast', function() {
+
+            });
+        });
     },
 
     joinSession: function() {
@@ -34,6 +47,8 @@ socket.on('connect', function() {
 
             }
         }
+    } else {
+        transition.loginTo();
     }
 });
 
@@ -54,10 +69,12 @@ socket.on('notification', function(data) {
 socket.on('logged in', function(data) {
     state.online = true;
     state.admin = data;
-    transition.login();
-    socket.emit('session start', {
-        id: localStorage.userID
-    });
+    transition.loginFrom();
+});
+
+socket.on('login failed', function() {
+    console.log("login failed");
+    transition.loginTo();
 });
 
 socket.on('session started', function() {
@@ -79,51 +96,6 @@ socket.on('receive games', function(data) {
 
 socket.on('receive rounds', function(data) {
     state.rounds = data;
-});
-
-var userInput = $('input#username');
-var passInput = $('input#password');
-var formInput = $('.login-form .form-control');
-
-console.log(formInput);
-
-$('#login').click(function() {
-    if (userInput.val() == "") {
-        userInput.parent().addClass('has-error');
-        return false;
-    }
-    if (passInput.val() == "") {
-        passInput.parent().addClass('has-error');
-        return false;
-    }
-    $('.login-form input').prop('disabled', true);
-    $.ajax({
-        type: "POST",
-        url: "api/user/login",
-        contentType: 'application/json',
-        data: JSON.stringify({
-            "username": userInput.val(),
-            "password": passInput.val()
-        })
-    })
-    .always(function() {
-        console.log("called");
-        $('.login-form input').prop('disabled', false);
-    })
-    .fail(function(data) {
-
-    })
-    .done(function(data) {
-        console.log(data.data);
-        localStorage.userID = data.data;
-    });
-    return false;
-});
-
-formInput.change(function(e) {
-    if ($(e.target).parent().hasClass('has-error')) {
-        $(e.target).parent().removeClass('has-error');
-    }
 });
 
 // socket.emit('create game', {

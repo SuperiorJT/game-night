@@ -29,6 +29,7 @@ module.exports = function(io) {
                     socket.emit('logged in', reply.admin);
                     notify.success(io, reply.username + " joined the game night server!", null);
                 } else {
+                    socket.emit('login failed', null);
                     notify.fail(socket, "Your local account data is invalid. Please login again.", null);
                 }
             });
