@@ -70,6 +70,45 @@ socket.on('connect', function() {
     })
 });
 
+var userInput = $('input#username');
+var passInput = $('input#password');
+var formInput = $('.login-form .form-control');
+
+console.log(formInput);
+
+$('#login').click(function() {
+    if (userInput.val() == "") {
+        userInput.parent().addClass('has-error');
+        return false;
+    }
+    if (passInput.val() == "") {
+        passInput.parent().addClass('has-error');
+        return false;
+    }
+    $('.login-form input').prop('disabled', true);
+    $.ajax({
+        type: "POST",
+        url: "api/user/login",
+        contentType: 'application/json',
+        data: JSON.stringify({
+            "username": userInput.val(),
+            "password": passInput.val()
+        })
+    }).always(function() {
+        console.log("called");
+        $('.login-form input').prop('disabled', false);
+    }).done(function(data) {
+        console.log(data);
+    });
+    return false;
+});
+
+formInput.change(function(e) {
+    if ($(e.target).parent().hasClass('has-error')) {
+        $(e.target).parent().removeClass('has-error');
+    }
+});
+
 // socket.emit('create game', {
 //
 //     id: 1,

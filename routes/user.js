@@ -19,6 +19,7 @@ router.post('/register', function(req, res) {
 
 router.post('/login', function(req, res) {
     var user = req.body;
+    console.log(user);
     users.existsForUsername(user.username, function(taken, id) {
         if (taken) {
             users.login(user.password, id, function(valid) {
