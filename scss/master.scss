@@ -1,0 +1,78 @@
+html, body {
+    height: 100%;
+    position: relative;
+}
+
+@keyframes animatedBackground {
+	from { background-position: 0 0; }
+	to { background-position: 100% 0; }
+}
+
+
+.bg {
+    .bg-0 {
+        position: absolute;
+        bottom: 0;
+        left: -200%;
+    	width: 300%;
+    	height: 20vh;
+    	background-image: url("../images/mario-ground.png");
+        background-size: auto 20vh;
+    	background-position: 0px 0px;
+    	background-repeat: repeat-x;
+
+        @media (max-width: 768px) {
+            animation: animatedBackground 10s linear infinite;
+        }
+        @media (min-width: 768px) {
+            animation: animatedBackground 15s linear infinite;
+        }
+        @media (min-width: 992px) {
+            animation: animatedBackground 30s linear infinite;
+        }
+        @media (min-width: 1200px) {
+            animation: animatedBackground 40s linear infinite;
+        }
+    }
+
+    .bg-1 {
+        position: absolute;
+        bottom: 20vh;
+    	width: 100%;
+    	height: 50vh;
+    	background-image: url("../images/mario-hills.png");
+        background-size: auto 50vh;
+    	background-position: 0px 0px;
+    	background-repeat: no-repeat;
+
+        @media (max-width: 768px) {
+            animation: animatedBackground 10s linear infinite;
+        }
+        @media (min-width: 768px) {
+            animation: animatedBackground 15s linear infinite;
+        }
+        @media (min-width: 992px) {
+            animation: animatedBackground 30s linear infinite;
+        }
+        @media (min-width: 1200px) {
+            animation: animatedBackground 40s linear infinite;
+        }
+    }
+}
+
+.content {
+    height: 100%;
+
+    .login {
+        min-height: 100%;
+
+        form input[type="submit"] {
+            width: calc(50% - 2px);
+        }
+    }
+}
+
+.vertical-align {
+    display: flex;
+    align-items: center;
+}
