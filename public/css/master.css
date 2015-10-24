@@ -1,6 +1,47 @@
+.notifications {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  padding: 0; }
+  .notifications .row {
+    height: 100%;
+    margin: 0; }
+    .notifications .row > div {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      padding-right: 15px;
+      z-index: 1000;
+      max-height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden; }
+      .notifications .row > div div {
+        flex: 1;
+        position: relative;
+        padding: 5px;
+        width: 100%;
+        min-height: 42px;
+        border: 1px solid; }
+        .notifications .row > div div i {
+          position: absolute;
+          top: 5px;
+          right: 10px; }
+          .notifications .row > div div i:hover {
+            cursor: pointer;
+            opacity: .5; }
+
 html, body {
   height: 100%;
   position: relative; }
+
+.test {
+  z-index: 50;
+  position: fixed;
+  bottom: 0; }
+
+.disable-scroll {
+  overflow-x: hidden;
+  overflow-y: hidden; }
 
 @keyframes animatedBackground {
   from {
@@ -18,18 +59,6 @@ html, body {
   background-size: auto 20vh;
   background-position: 0px 0px;
   background-repeat: repeat-x; }
-  @media (max-width: 768px) {
-    .bg .bg-0 {
-      animation: animatedBackground 10s linear infinite; } }
-  @media (min-width: 768px) {
-    .bg .bg-0 {
-      animation: animatedBackground 15s linear infinite; } }
-  @media (min-width: 992px) {
-    .bg .bg-0 {
-      animation: animatedBackground 30s linear infinite; } }
-  @media (min-width: 1200px) {
-    .bg .bg-0 {
-      animation: animatedBackground 40s linear infinite; } }
 
 .bg .bg-1 {
   position: absolute;
@@ -40,18 +69,6 @@ html, body {
   background-size: auto 50vh;
   background-position: 0px 0px;
   background-repeat: no-repeat; }
-  @media (max-width: 768px) {
-    .bg .bg-1 {
-      animation: animatedBackground 10s linear infinite; } }
-  @media (min-width: 768px) {
-    .bg .bg-1 {
-      animation: animatedBackground 15s linear infinite; } }
-  @media (min-width: 992px) {
-    .bg .bg-1 {
-      animation: animatedBackground 30s linear infinite; } }
-  @media (min-width: 1200px) {
-    .bg .bg-1 {
-      animation: animatedBackground 40s linear infinite; } }
 
 .content {
   height: 100%; }
@@ -63,4 +80,8 @@ html, body {
 
 .vertical-align {
   display: flex;
-  align-items: center; }
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  align-items: center;
+  -webkit-align-items: center;
+  -ms-align-items: center; }

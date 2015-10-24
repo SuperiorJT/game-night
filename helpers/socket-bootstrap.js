@@ -13,6 +13,11 @@ module.exports = function(io) {
             "socket": socket
         };
         console.log(socket.request.connection.remoteAddress + " has connected to the server. id: " + socket.id);
+        socket.on('test global', function() {
+            notify.neutral(io, "This is a global test", null);
+            notify.success(io, "This is a global test", null);
+            notify.fail(io, "This is a global test", null);
+        });
         socket.on('login', function(id) {
             client.hgetall('user:' + id, function(err, reply) {
                 if (err) {
@@ -27,7 +32,7 @@ module.exports = function(io) {
                     cache.users.push(reply);
                     console.log(reply.username + " has joined the server!");
                     socket.emit('logged in', reply.admin);
-                    notify.success(io, reply.username + " joined the game night server!", null);
+                    notify.neutral(io, reply.username + " joined the game night server!", null);
                 } else {
                     socket.emit('login failed', null);
                     notify.fail(socket, "Your local account data is invalid. Please login again.", null);

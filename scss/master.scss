@@ -1,6 +1,19 @@
+@import "notifications";
+
 html, body {
     height: 100%;
     position: relative;
+}
+
+.test {
+    z-index: 50;
+    position: fixed;
+    bottom: 0;
+}
+
+.disable-scroll {
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 @keyframes animatedBackground {
@@ -21,18 +34,18 @@ html, body {
     	background-position: 0px 0px;
     	background-repeat: repeat-x;
 
-        @media (max-width: 768px) {
-            animation: animatedBackground 10s linear infinite;
-        }
-        @media (min-width: 768px) {
-            animation: animatedBackground 15s linear infinite;
-        }
-        @media (min-width: 992px) {
-            animation: animatedBackground 30s linear infinite;
-        }
-        @media (min-width: 1200px) {
-            animation: animatedBackground 40s linear infinite;
-        }
+        // @media (max-width: 768px) {
+        //     animation: animatedBackground 10s linear infinite;
+        // }
+        // @media (min-width: 768px) {
+        //     animation: animatedBackground 15s linear infinite;
+        // }
+        // @media (min-width: 992px) {
+        //     animation: animatedBackground 30s linear infinite;
+        // }
+        // @media (min-width: 1200px) {
+        //     animation: animatedBackground 40s linear infinite;
+        // }
     }
 
     .bg-1 {
@@ -45,18 +58,18 @@ html, body {
     	background-position: 0px 0px;
     	background-repeat: no-repeat;
 
-        @media (max-width: 768px) {
-            animation: animatedBackground 10s linear infinite;
-        }
-        @media (min-width: 768px) {
-            animation: animatedBackground 15s linear infinite;
-        }
-        @media (min-width: 992px) {
-            animation: animatedBackground 30s linear infinite;
-        }
-        @media (min-width: 1200px) {
-            animation: animatedBackground 40s linear infinite;
-        }
+        // @media (max-width: 768px) {
+        //     animation: animatedBackground 10s linear infinite;
+        // }
+        // @media (min-width: 768px) {
+        //     animation: animatedBackground 15s linear infinite;
+        // }
+        // @media (min-width: 992px) {
+        //     animation: animatedBackground 30s linear infinite;
+        // }
+        // @media (min-width: 1200px) {
+        //     animation: animatedBackground 40s linear infinite;
+        // }
     }
 }
 
@@ -75,5 +88,9 @@ html, body {
 
 .vertical-align {
     display: flex;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     align-items: center;
+    -webkit-align-items: center;
+    -ms-align-items: center;
 }

@@ -49,7 +49,7 @@ module.exports.init = function(conn) {
                     var username = cache.users.filter(function(val) {
                         return val.id == data.id;
                     })[0].username;
-                    notify.success(conn.io.to('round room ' + cache.session.id), username + " has joined the lobby!")
+                    notify.neutral(conn.io.to('round room ' + cache.session.id), username + " has joined the lobby!")
                 });
             }
         });
@@ -63,11 +63,11 @@ module.exports.init = function(conn) {
             } else {
                 client.hgetall('round:' + data.round, function(err, reply) {
                     conn.socket.emit('round left', reply);
+                    conn.io.to('round room ' + data.round).emit('round left', reply);
                     conn.socket.leave('round room ' + data.round);
                     var username = cache.users.filter(function(val) {
                         return val.id == data.id;
                     })[0].username;
-                    notify.success(conn.io.to('round room ' + cache.session.id), username + " has left the lobby!")
                 });
             }
         });
@@ -109,7 +109,7 @@ module.exports.init = function(conn) {
                 }
             })
         } else {
-            notify.fail(conn.socket, "You are not authorized to finished a round", null);
+            notify.fail(conn.socket, "You are not authorized to finish a round", null);
         }
     });
 

@@ -13,17 +13,16 @@ var transition = {
 
     loginTo: function() {
         $(".login")
-        .css("display", "flex")
+        .attr('style', 'display: -webkit-flex; display: flex; display: -ms-flexbox;')
         .hide()
         .fadeIn();
-        console.log("transition complete");
     },
 
     loginFrom: function() {
         console.log("login transition");
         $('.login').fadeOut('fast', function() {
             $('.pre-session').fadeIn('fast', function() {
-
+                
             });
         });
     },
@@ -63,7 +62,7 @@ socket.on('reconnect', function() {
 });
 
 socket.on('notification', function(data) {
-    console.log(data.msg);
+    notifications.notify(data);
 });
 
 socket.on('logged in', function(data) {

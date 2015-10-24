@@ -7,3 +7,7 @@ module.exports.success = function(channel, msg, data) {
 module.exports.fail = function(channel, msg, data) {
     channel.emit('notification', format.fail(msg, data));
 }
+
+module.exports.neutral = function(channel, msg, data) {
+    channel.emit('notification', format.neutral(msg, data));
+}

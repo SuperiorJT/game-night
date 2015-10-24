@@ -3,9 +3,14 @@ function pass() {
     this.msg = "call successful";
 }
 
-function err (){
+function err() {
     this.error = true;
     this.msg = "call unsuccessful";
+};
+
+function none() {
+    this.error = null;
+    this.msg = "call neutral";
 };
 
 var replaceResponseValues = function(val, msg, data) {
@@ -26,6 +31,10 @@ format.success = function(msg, data) {
 
 format.fail = function(msg, data) {
     return replaceResponseValues(new err(), msg, data);
+};
+
+format.neutral = function(msg, data) {
+    return replaceResponseValues(new none(), msg, data);
 };
 
 module.exports = format;
