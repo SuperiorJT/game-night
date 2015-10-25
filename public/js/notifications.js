@@ -37,7 +37,7 @@ var notifications = {
                 $(this).velocity({
                     right: -div.width() - 30
                 }, {
-                    delay: 10000,
+                    delay: 4000,
                     duration: 'fast',
                     easing: 'easeInCubic',
                     complete: function() {
