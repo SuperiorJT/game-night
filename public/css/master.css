@@ -62,30 +62,42 @@ html, body {
 
 @keyframes animatedBackground {
   from {
-    background-position: 0 0; }
+    transform: translateX(0); }
   to {
-    background-position: 100% 0; } }
+    transform: translateX(-20000000px); } }
 
-.bg .bg-0 {
-  position: absolute;
-  bottom: 0;
-  left: -200%;
-  width: 300%;
-  height: 20vh;
-  background-image: url("../images/mario-ground.png");
-  background-size: auto 20vh;
-  background-position: 0px 0px;
-  background-repeat: repeat-x; }
-
-.bg .bg-1 {
-  position: absolute;
-  bottom: 20vh;
+.bg {
+  height: 100%;
   width: 100%;
-  height: 50vh;
-  background-image: url("../images/mario-hills.png");
-  background-size: auto 50vh;
-  background-position: 0px 0px;
-  background-repeat: no-repeat; }
+  position: relative;
+  overflow: hidden; }
+  .bg .bg-0 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 3000000%;
+    height: 20vh;
+    background: url("../images/mario-ground.png");
+    background-size: auto 20vh;
+    background-position: 0px 0px;
+    background-repeat: repeat-x;
+    animation-name: animatedBackground;
+    animation-duration: 200000s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite; }
+  .bg .bg-1 {
+    position: absolute;
+    bottom: 20vh;
+    width: 3000000%;
+    height: 50vh;
+    background-image: url("../images/mario-hills.png");
+    background-size: auto 50vh;
+    background-position: 0px 0px;
+    background-repeat: repeat-x;
+    animation-name: animatedBackground;
+    animation-duration: 200000s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite; }
 
 .content {
   height: 100%; }
