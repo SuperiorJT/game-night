@@ -75,6 +75,8 @@ html, body {
   .content .login {
     display: none;
     min-height: 100%; }
+    .content .login form label[for="username"] {
+      display: none; }
     .content .login form input[type="submit"] {
       width: calc(50% - 2px); }
 

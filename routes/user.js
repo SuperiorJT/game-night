@@ -6,15 +6,22 @@ var users = require('../helpers/users');
 
 router.post('/register', function(req, res) {
     var user = req.body;
-    users.existsForUsername(user.username, function(taken) {
-        if (!taken) {
-            users.create(user, function(err, reply) {
-                res.status(200).json(format.success("successfully created user!", null));
-            })
-        } else {
-            res.status(400).json(format.fail("user already exists for given username.", null));
-        }
-    });
+    if (user.username && user.password) {
+        users.existsForUsername(user.username, function(taken) {
+            if (!taken) {
+                users.create(user, function(err, reply) {
+                    if (err) {
+                        res.status(500).json(format.fail("there was a server-side issue. Please try again later.", null));
+                    }
+                    res.status(200).json(format.success("successfully created user!", null));
+                })
+            } else {
+                res.status(400).json(format.fail("user already exists for given username.", { exists: true }));
+            }
+        });
+    } else {
+        res.status(400).json(format.fail("Missing required fields", null));
+    }
 });
 
 router.post('/login', function(req, res) {

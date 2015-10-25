@@ -2,15 +2,20 @@ var userInput = $('input#username');
 var passInput = $('input#password');
 var formInput = $('.login-form .form-control');
 
-console.log(formInput);
-
-$('#login').click(function() {
+var checkForm = function() {
     if (userInput.val() == "") {
         userInput.parent().addClass('has-error');
         return false;
     }
     if (passInput.val() == "") {
         passInput.parent().addClass('has-error');
+        return false;
+    }
+    return true;
+};
+
+$('#login').click(function() {
+    if (!checkForm()) {
         return false;
     }
     $('.login-form input').prop('disabled', true);
@@ -39,12 +44,7 @@ $('#login').click(function() {
 });
 
 $('#register').click(function() {
-    if (userInput.val() == "") {
-        userInput.parent().addClass('has-error');
-        return false;
-    }
-    if (passInput.val() == "") {
-        passInput.parent().addClass('has-error');
+    if (!checkForm()) {
         return false;
     }
     $('.login-form input').prop('disabled', true);
@@ -62,7 +62,11 @@ $('#register').click(function() {
         $('.login-form input').prop('disabled', false);
     })
     .fail(function(data) {
-        
+        console.log(data.responseJSON);
+        if (data.responseJSON.data.exists) {
+            userInput.parent().addClass('has-error');
+            userInput.parent().find('label').show();
+        }
     })
     .done(function(data) {
         notifications.notify(data);
@@ -71,7 +75,8 @@ $('#register').click(function() {
 });
 
 formInput.change(function(e) {
-    if ($(e.target).parent().hasClass('has-error')) {
-        $(e.target).parent().removeClass('has-error');
+    if ($(this).parent().hasClass('has-error')) {
+        $(this).parent().removeClass('has-error');
+        $(this).parent().find('label').hide();
     }
 });

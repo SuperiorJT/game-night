@@ -22,7 +22,7 @@ var transition = {
         console.log("login transition");
         $('.login').fadeOut('fast', function() {
             $('.pre-session').fadeIn('fast', function() {
-                
+
             });
         });
     },

@@ -80,9 +80,19 @@ html, body {
         display: none;
         min-height: 100%;
 
-        form input[type="submit"] {
-            width: calc(50% - 2px);
+        form {
+
+            label[for="username"] {
+                display: none;
+            }
+
+            input[type="submit"] {
+                width: calc(50% - 2px);
+            }
+
         }
+
+
     }
 }
 
