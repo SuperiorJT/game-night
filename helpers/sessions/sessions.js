@@ -32,6 +32,12 @@ module.exports.start = function(data, callback) {
     }
 };
 
+/*
+
+    State Change: User is transferred to current session
+
+*/
+
 module.exports.join = function(data, callback) {
     if (!cache.session.id) {
         callback(format.fail("Session must be started before joining one", null));
@@ -42,24 +48,53 @@ module.exports.join = function(data, callback) {
             } else {
                 if (cache.session.attendees.indexOf(data.id) == -1) {
                     cache.session.attendees.push(data.id);
+                    client.hset('session:' + cache.session.id, 'attendees', JSON.stringify(cache.session.attendees));
                 }
-                users.updateState(reply.idea, cache.session.id, null);
+                console.log("real-sessionID: " + cache.session.id);
+                console.log(reply);
+                users.updateState(reply.id, null, cache.session.id, null);
                 callback(true);
             }
         });
     }
 };
 
+/*
+
+    State Change: User is removed from current session
+
+*/
+
+module.exports.leave = function(data, callback) {
+    if (!cache.session.id) {
+        callback(format.fail("Session must exist before leaving one", null));
+    } else {
+        users.checkStatus(data.id, function(reply) {
+            if (reply.error) {
+                callback(reply);
+            } else {
+                users.updateState(reply.idea, null, 0, null);
+                callback(true);
+            }
+        });
+    }
+};
+
+/*
+
+    State Change: All session attendees are removed from current lobby and session
+
+*/
 module.exports.end = function(data, callback) {
     if (!cache.session.id) {
         callback(format.fail("Session must be started before ending one", null));
     } else {
         cache.session.attendees.forEach(function(val) {
-            client.hset('user:' + val, 'session', 0);
+            users.updateState(val, null, 0, 0);
         });
         client.hset('session:' + data.id, 'attendees', JSON.stringify(cache.session.attendees));
         client.hset('session:' + data.id, 'rounds', JSON.stringify(cache.session.rounds));
         cache.session = {};
-        callback(true);
+        callback(null, true);
     }
 };

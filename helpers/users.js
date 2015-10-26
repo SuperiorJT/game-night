@@ -37,7 +37,10 @@ module.exports.create = function(user, callback) {
                 "exp": 0,
                 "rank": 0,
                 "skill": JSON.stringify([]),
-                "sessions": JSON.stringify([])
+                "sessions": JSON.stringify([]),
+                "session": 0,
+                "lobby": 0,
+                "online": false
             });
             client.sadd(['users', JSON.stringify({
                 "id": reply,
@@ -90,7 +93,7 @@ module.exports.checkStatus = function(id, callback) {
     cache.users.some(function(user) {
         if (user.id == id) {
             userFound = true;
-            callback(format.success(user));
+            callback(user);
         }
         return userFound;
     });
@@ -99,19 +102,41 @@ module.exports.checkStatus = function(id, callback) {
     }
 };
 
-module.exports.updateState = function(id, sessionId, lobbyId) {
-    cache.users.some(function(val, index, array) {
-        if (id == val.id) {
-            if (lobbyId != null) {
-                cache.users[index].lobby = lobbyId;
-                client.hset('user:' + id, 'lobby', lobbyId);
+module.exports.updateState = function(id, online, sessionId, lobbyId) {
+    client.smembers('users', function(err, reply) {
+        reply.some(function(val) {
+            if (id == JSON.parse(val).id) {
+                console.log("userID: " + id);
+                var index = null;
+                cache.users.some(function(val, i) {
+                    if (val.id = id) {
+                        index = i;
+                        return true;
+                    }
+                    return false;
+                });
+                if (online != null) {
+                    if (index) {
+                        cache.users[index].online = online;
+                    }
+                    client.hset('user:' + id, 'online', online);
+                }
+                if (lobbyId != null) {
+                    if (index) {
+                        cache.users[index].lobby = lobbyId;
+                    }
+                    client.hset('user:' + id, 'lobby', lobbyId);
+                }
+                if (sessionId != null) {
+                    if (index) {
+                        cache.users[index].session = sessionId;
+                    }
+                    console.log("sessionID: " + sessionId);
+                    client.hset('user:' + id, 'session', sessionId);
+                }
+                return true;
             }
-            if (sessionId != null) {
-                cache.users[index].session = sessionId;
-                client.hset('user:' + id, 'session', sessionId);
-            }
-            return true;
-        }
-        return false;
+            return false;
+        });
     });
 };

@@ -4,10 +4,14 @@ var state = {
     online : false,
     admin : false,
     session : null,
+    sessionAvailable : false,
     games : [],
     rounds : [],
-    round : null
+    round : null,
+    user : null
 };
+
+var sessionAutoJoin = false;
 
 var transition = {
 
@@ -19,16 +23,38 @@ var transition = {
     },
 
     loginFrom: function() {
-        console.log("login transition");
+        console.log("loginFrom transition");
         $('.login').fadeOut('fast', function() {
-            $('.pre-session').fadeIn('fast', function() {
-
-            });
+            transition.sessionTo();
         });
     },
 
-    joinSession: function() {
-        console.log("session transition");
+    sessionTo: function() {
+        console.log("sessionTo transition");
+        if (state.admin) {
+            $('#trigger-session').show();
+        }
+        if (state.session || state.user.session) {
+            $('#join-session').html('Leave Session');
+        }
+        $('.session')
+        .attr('style', 'display: -webkit-flex; display: flex; display: -ms-flexbox;')
+        .hide()
+        .fadeIn('fast');
+    },
+
+    sessionJoin: function() {
+        console.log("session join transition");
+        $('#join-session').html('Leave Session');
+    },
+
+    sessionLeave: function() {
+        console.log("session leave transition");
+        $('#join-session').html('Join Session');
+    },
+
+    sessionFrom: function() {
+
     }
 
 };
@@ -37,15 +63,6 @@ socket.on('connect', function() {
     console.log("Successfully connected to the game night server!");
     if (localStorage.userID) {
         socket.emit('login', localStorage.userID);
-        if (state.session) {
-            socket.emit('fetch all')
-            socket.emit('session join', {
-                id: localStorage.userID
-            });
-            if (state.round) {
-
-            }
-        }
     } else {
         transition.loginTo();
     }
@@ -67,26 +84,24 @@ socket.on('notification', function(data) {
 
 socket.on('logged in', function(data) {
     state.online = true;
-    state.admin = data;
+    state.user = data.user;
+    state.admin = data.user.admin;
+    state.sessionAvailable = data.session;
+    if (state.sessionAvailable) {
+        $('#trigger-session').html('End Session');
+    }
+    if (state.session || state.user.session) {
+        socket.emit('session join', {
+            id: localStorage.userID
+        });
+        socket.emit('fetch all')
+    }
     transition.loginFrom();
 });
 
 socket.on('login failed', function() {
     console.log("login failed");
     transition.loginTo();
-});
-
-socket.on('session started', function() {
-    socket.emit('session join', {
-        id: localStorage.userID
-    });
-});
-
-socket.on('session joined', function(data) {
-    state.session = data;
-    socket.emit('fetch games');
-    socket.emit('fetch rounds');
-    transition.joinSession();
 });
 
 socket.on('receive games', function(data) {

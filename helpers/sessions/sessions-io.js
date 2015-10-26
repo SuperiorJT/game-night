@@ -40,6 +40,21 @@ module.exports.init = function(conn) {
         });
     });
 
+    conn.socket.on('session leave', function(data) {
+        sessions.join(data, function(reply) {
+            if (reply.error) {
+                notify.fail(conn.socket, reply.msg, reply.data);
+                conn.socket.emit('session join failed', null);
+            } else {
+                client.hget('user:' + data.id, 'username', function(err, reply) {
+                    conn.socket.emit('session left', null);
+                    conn.socket.leave('session room ' + cache.session.id);
+                    notify.success(conn.io, reply + " joined the session!", null);
+                });
+            }
+        });
+    });
+
     conn.socket.on('session end', function(data) {
         var user = cache.users.filter(function(val) {
             return val.id == data.id;
@@ -51,6 +66,10 @@ module.exports.init = function(conn) {
                 } else if (reply.error) {
                     notify.fail(conn.socket, reply.msg, reply.data);
                 } else {
+                    cache.users.forEach(function(val) {
+                        conn.io.sockets.connected[val.sid].leave('session room ' + cache.session.id);
+                    });
+                    notify.neutral(conn.io, 'The current session has ended!', null);
                     conn.io.emit('session ended', reply);
                 }
             });

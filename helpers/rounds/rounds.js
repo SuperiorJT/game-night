@@ -36,6 +36,11 @@ module.exports.create = function(data, callback) {
     }
 };
 
+/*
+
+    State Change: User is added to lobby
+
+*/
 module.exports.join = function(data, callback) {
     if (!data.id || !data.round) {
         callback(format.fail("Missing required fields.", null));
@@ -56,7 +61,7 @@ module.exports.join = function(data, callback) {
                             callback(format.fail("You are already in a lobby!", null));
                         } else {
                             cache.rounds[index].users.push(data.id);
-                            users.updateState(data.id, null, round.id);
+                            users.updateState(data.id, null, null, round.id);
                             client.hset('round:' + data.round, 'users', JSON.stringify(users));
                             callback(true);
                         }
@@ -71,6 +76,11 @@ module.exports.join = function(data, callback) {
     }
 };
 
+/*
+
+    State Change: User is removed from lobby
+
+*/
 module.exports.leave = function(data, callback) {
     if (!data.id || !data.round) {
         callback(format.fail("Missing required fields.", null));
@@ -87,7 +97,7 @@ module.exports.leave = function(data, callback) {
                             return val.id != user.id;
                         });
                         client.hset('round:' + data.round, 'users', JSON.stringify(users));
-                        users.updateState(data.id, null, 0);
+                        users.updateState(data.id, null, null, 0);
                         callback(true);
                     }
                     return userFound;
@@ -167,6 +177,11 @@ module.exports.claimVictory = function(data, callback) {
     }
 };
 
+/*
+
+    State Change: User is removed from lobby
+
+*/
 module.exports.declareWinners = function(data, callback) {
     if (!data.round || !data.winners) {
         callback(format.fail("Missing required fields.", null));
@@ -183,7 +198,7 @@ module.exports.declareWinners = function(data, callback) {
                     cache.session.rounds.push(data.round);
                 }
                 round.users.forEach(function(val) {
-                    users.updateState(val, null, 0);
+                    users.updateState(val, null, null, 0);
                 });
                 cache.rounds = cache.rounds.filter(function(val) {
                     return val.id != round.id;
@@ -198,6 +213,11 @@ module.exports.declareWinners = function(data, callback) {
     }
 };
 
+/*
+
+    State Change: All users in lobby are removed from lobby
+
+*/
 module.exports.close = function(data, callback) {
     if (!data.round) {
         callback(format.fail("Missing required fields.", null));
@@ -208,7 +228,7 @@ module.exports.close = function(data, callback) {
                 roundFound = true;
                 client.del('round:' + round.id);
                 round.users.forEach(function(val) {
-                    users.updateState(val, null, 0);
+                    users.updateState(val, null, null, 0);
                 });
                 cache.rounds = cache.rounds.filter(function(val) {
                     return val.id != round.id;

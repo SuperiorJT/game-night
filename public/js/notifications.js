@@ -53,7 +53,7 @@ var notifications = {
             div.find('i').click(function(e) {
                 div.velocity('stop', true);
                 div.velocity({
-                    right: -div.width() - 30
+                    right: -div.width() - 70
                 }, 'fast', 'easeInCubic', function() {
                     console.log("derp");
                     notifications.queue.shift();

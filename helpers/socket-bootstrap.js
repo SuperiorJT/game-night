@@ -3,6 +3,7 @@ var sessions = require('./sessions/sessions-io');
 var rounds = require('./rounds/rounds-io');
 var roundFuncs = require('./rounds/rounds');
 var notify = require('./socket-notifications');
+var users = require('./users');
 var client = require('./db');
 var cache = require('./cache');
 
@@ -24,14 +25,25 @@ module.exports = function(io) {
                     throw err;
                 }
                 if (reply) {
-                    reply.id = id;
+                    reply.id = JSON.parse(id);
                     reply.skill = JSON.parse(reply.skill);
                     reply.sessions = JSON.parse(reply.sessions);
+                    reply.exp = JSON.parse(reply.exp);
+                    reply.rank = JSON.parse(reply.rank);
+                    reply.session = JSON.parse(reply.session);
+                    reply.admin = JSON.parse(reply.admin);
+                    reply.lobby = JSON.parse(reply.lobby);
+                    reply.online = true;
                     reply.sid = socket.id;
-                    reply.password = undefined;
+                    delete reply.password;
                     cache.users.push(reply);
+                    users.updateState(reply.id, true, reply.session, reply.lobby);
                     console.log(reply.username + " has joined the server!");
-                    socket.emit('logged in', reply.admin);
+                    var sessionAvailable = false;
+                    if (cache.session.id) {
+                        sessionAvailable = true;
+                    }
+                    socket.emit('logged in', { user: reply, session: sessionAvailable });
                     notify.neutral(io, reply.username + " joined the game night server!", null);
                 } else {
                     socket.emit('login failed', null);
@@ -44,6 +56,7 @@ module.exports = function(io) {
             console.log(socket.request.connection.remoteAddress + " has disconnected to the server. id: " + socket.id);
             cache.users.some(function(user) {
                 if (user.sid == socket.id) {
+                    users.updateState(user.id, false, null, null);
                     cache.users = cache.users.filter(function(val) {
                         return val.id != user.id;
                     });
@@ -59,7 +72,11 @@ module.exports = function(io) {
         });
 
         socket.on('fetch users', function() {
-            socket.to('session room ' + cache.session.id).emit('receive users', cache.users);
+            if (cache.session.id) {
+                socket.to('session room ' + cache.session.id).emit('receive users', cache.users.filter(function(val) {
+                    return val.session == cache.session.id;
+                }));
+            }
         });
 
         // Modules to be bootstrapped must be initialized below
