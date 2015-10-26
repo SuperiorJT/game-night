@@ -36,61 +36,49 @@ html, body {
 }
 
 @keyframes animatedBackground {
-	from { background-position: 0 0; }
-	to { background-position: 100% 0; }
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-20000000px);
+	}
 }
 
-
 .bg {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  overflow: hidden;
+
     .bg-0 {
-        z-index: -1;
-        position: absolute;
-        bottom: 0;
-        left: -200%;
-    	width: 300%;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    	width: 3000000%;
     	height: 20vh;
-    	background-image: url("../images/mario-ground.png");
-        background-size: auto 20vh;
+    	background: url("../images/mario-ground.png");
+      background-size: auto 20vh;
     	background-position: 0px 0px;
     	background-repeat: repeat-x;
-
-        // @media (max-width: 768px) {
-        //     animation: animatedBackground 10s linear infinite;
-        // }
-        // @media (min-width: 768px) {
-        //     animation: animatedBackground 15s linear infinite;
-        // }
-        // @media (min-width: 992px) {
-        //     animation: animatedBackground 30s linear infinite;
-        // }
-        // @media (min-width: 1200px) {
-        //     animation: animatedBackground 40s linear infinite;
-        // }
+      animation-name: animatedBackground;
+      animation-duration: 200000s;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
     }
 
     .bg-1 {
-        z-index: -1;
-        position: absolute;
-        bottom: 20vh;
-    	width: 100%;
+      position: absolute;
+      bottom: 20vh;
+    	width: 3000000%;
     	height: 50vh;
     	background-image: url("../images/mario-hills.png");
-        background-size: auto 50vh;
+      background-size: auto 50vh;
     	background-position: 0px 0px;
-    	background-repeat: no-repeat;
-
-        // @media (max-width: 768px) {
-        //     animation: animatedBackground 10s linear infinite;
-        // }
-        // @media (min-width: 768px) {
-        //     animation: animatedBackground 15s linear infinite;
-        // }
-        // @media (min-width: 992px) {
-        //     animation: animatedBackground 30s linear infinite;
-        // }
-        // @media (min-width: 1200px) {
-        //     animation: animatedBackground 40s linear infinite;
-        // }
+    	background-repeat: repeat-x;
+      animation-name: animatedBackground;
+      animation-duration: 200000s;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
     }
 }
 
