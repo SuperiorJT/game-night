@@ -17,13 +17,7 @@
             <div class="bg-2"></div>
         </div>
 
-        <button type="button" class="btn btn-default test">Global Test</button>
-
-        <div class="container-fluid notifications">
-            <div class="row">
-                <div class="col-xs-12 col-sm-3 col-sm-offset-9 col-md-4 col-md-offset-8 col-lg-3 col-lg-offset-9 notifications-list"></div>
-            </div>
-        </div>
+        <!-- <button type="button" class="btn btn-default test">Global Test</button> -->
 
         <div class="content container-fluid">
 
@@ -46,13 +40,36 @@
                 </div>
             </div>
 
-            <div class="row session vertical-align">
-                <div class="col-xs-12">
-                    <button type="button" name="joinSession" class="btn btn-default" id="join-session">Join Session</button>
-                    <button type="button" name="createSession" class="btn btn-default" id="trigger-session">Start Session</button>
+            <div class="session">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="panel lobby-list">
+                            <div class="session-buttons">
+                                <button type="button" name="joinSession" class="btn btn-default" id="join-session">Join Session</button>
+                                <button type="button" name="createSession" class="btn btn-default" id="trigger-session">Start Session</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row profile-mobile-row">
+                    <div class="profile-mobile panel">
+                        <div class="avatar"></div>
+                        <p class="username"></p>
+                        <div class="exp">
+                            <p class="exp-rank"></p>
+                            <div class="exp-bar">
+                                <div class="exp-fill"></div>
+                            </div>
+                            <p class="exp-rank"></p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+        </div>
+
+        <div class="notifications col-xs-12 col-sm-3 col-md-4 col-lg-3">
+            <div class="notifications-list"></div>
         </div>
 
         <script src="components/jquery/jquery.js"></script>

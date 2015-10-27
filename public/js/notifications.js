@@ -59,10 +59,10 @@ var notifications = {
                     notifications.queue.shift();
                     var others = div.nextAll();
                     if (mobile && notifications.queue.length > 0) {
-                        notifications.notify(notifications.queue[0]);
                         div.remove();
+                        notifications.notify(notifications.queue[0]);
                     }
-                    if (!mobile) {
+                    else {
                         div.velocity({
                             minHeight: 0,
                             maxHeight: 0,
