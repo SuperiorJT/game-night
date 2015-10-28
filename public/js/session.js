@@ -2,6 +2,7 @@ var joinSession = $('#join-session');
 var triggerSession = $('#trigger-session');
 
 joinSession.click(function() {
+    console.log(state.session);
     if (!state.session) {
         socket.emit('session join', { id: localStorage.userID });
     } else {
@@ -11,9 +12,11 @@ joinSession.click(function() {
 });
 
 triggerSession.click(function() {
+    console.log(state.sessionAvailable);
     if (state.sessionAvailable) {
         socket.emit('session end', { id: localStorage.userID });
     } else {
+        console.log(socket);
         socket.emit('session start', { id: localStorage.userID });
     }
 });
@@ -40,6 +43,7 @@ socket.on('session ended', function() {
 });
 
 socket.on('session joined', function(data) {
+    console.log(data);
     state.session = data;
     socket.emit('fetch games');
     socket.emit('fetch rounds');

@@ -66,18 +66,14 @@ module.exports.join = function(data, callback) {
 */
 
 module.exports.leave = function(data, callback) {
-    if (!cache.session.id) {
-        callback(format.fail("Session must exist before leaving one", null));
-    } else {
-        users.checkStatus(data.id, function(reply) {
-            if (reply.error) {
-                callback(reply);
-            } else {
-                users.updateState(reply.idea, null, 0, null);
-                callback(true);
-            }
-        });
-    }
+    users.checkStatus(data.id, function(reply) {
+        if (reply.error) {
+            callback(reply);
+        } else {
+            users.updateState(reply.idea, null, 0, null);
+            callback(true);
+        }
+    });
 };
 
 /*

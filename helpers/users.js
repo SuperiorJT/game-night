@@ -104,12 +104,13 @@ module.exports.checkStatus = function(id, callback) {
 
 module.exports.updateState = function(id, online, sessionId, lobbyId) {
     client.smembers('users', function(err, reply) {
+        console.log(cache.users);
         reply.some(function(val) {
             if (id == JSON.parse(val).id) {
                 console.log("userID: " + id);
                 var index = null;
                 cache.users.some(function(val, i) {
-                    if (val.id = id) {
+                    if (val.id == id) {
                         index = i;
                         return true;
                     }
@@ -138,5 +139,6 @@ module.exports.updateState = function(id, online, sessionId, lobbyId) {
             }
             return false;
         });
+        console.log(cache.users);
     });
 };

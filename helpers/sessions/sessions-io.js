@@ -9,6 +9,7 @@ module.exports.init = function(conn) {
         var user = cache.users.filter(function(val) {
             return val.id == data.id;
         })[0];
+        console.log(cache.users);
         if (user.admin) {
             sessions.start(data, function(err, reply) {
                 if (err) {
@@ -41,15 +42,15 @@ module.exports.init = function(conn) {
     });
 
     conn.socket.on('session leave', function(data) {
-        sessions.join(data, function(reply) {
+        sessions.leave(data, function(reply) {
             if (reply.error) {
                 notify.fail(conn.socket, reply.msg, reply.data);
-                conn.socket.emit('session join failed', null);
+                conn.socket.emit('session leave failed', null);
             } else {
                 client.hget('user:' + data.id, 'username', function(err, reply) {
                     conn.socket.emit('session left', null);
                     conn.socket.leave('session room ' + cache.session.id);
-                    notify.success(conn.io, reply + " joined the session!", null);
+                    notify.success(conn.io, reply + " left the session!", null);
                 });
             }
         });

@@ -37,6 +37,7 @@ var transition = {
         if (state.session || state.user.session) {
             $('#join-session').html('Leave Session');
         }
+        $('.username').html(state.user.username);
         $('.session')
         .attr('style', 'display: -webkit-flex; display: flex; display: -ms-flexbox;')
         .hide()
@@ -94,7 +95,7 @@ socket.on('logged in', function(data) {
         socket.emit('session join', {
             id: localStorage.userID
         });
-        socket.emit('fetch all')
+        socket.emit('fetch all');
     }
     transition.loginFrom();
 });

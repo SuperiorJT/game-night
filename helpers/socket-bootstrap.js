@@ -25,12 +25,15 @@ module.exports = function(io) {
                     throw err;
                 }
                 if (reply) {
-                    reply.id = JSON.parse(id);
+                    reply.id = JSON.parse(reply.id);
                     reply.skill = JSON.parse(reply.skill);
                     reply.sessions = JSON.parse(reply.sessions);
                     reply.exp = JSON.parse(reply.exp);
                     reply.rank = JSON.parse(reply.rank);
                     reply.session = JSON.parse(reply.session);
+                    if (reply.session != cache.session.id) {
+                        reply.session = 0;
+                    }
                     reply.admin = JSON.parse(reply.admin);
                     reply.lobby = JSON.parse(reply.lobby);
                     reply.online = true;
