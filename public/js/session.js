@@ -1,6 +1,8 @@
 var joinSession = $('#join-session');
 var triggerSession = $('#trigger-session');
 
+var profileOpen = false;
+
 joinSession.click(function() {
     console.log(state.session);
     if (!state.session) {
@@ -18,6 +20,36 @@ triggerSession.click(function() {
     } else {
         console.log(socket);
         socket.emit('session start', { id: localStorage.userID });
+    }
+});
+
+$('.profile-container').click(function() {
+    if (!profileOpen) {
+        profileOpen = true;
+        $('.profile-mobile-row').velocity({
+            top: 0
+        });
+        $('.profile-mobile').velocity({
+            backgroundColorAlpha: 1
+        });
+        $('.profile-mobile-close').velocity({
+            opacity: 1
+        });
+    }
+});
+
+$('.profile-mobile-close').click(function() {
+    if (profileOpen) {
+        profileOpen = false;
+        $('.profile-mobile-row').velocity({
+            top: '86vh'
+        });
+        $('.profile-mobile').velocity({
+            backgroundColorAlpha: 0.7
+        });
+        $('.profile-mobile-close').velocity({
+            opacity: 0
+        });
     }
 });
 
