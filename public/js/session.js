@@ -1,4 +1,5 @@
 var joinSession = $('#join-session');
+var autoJoinSession = $('#auto-join-session');
 var triggerSession = $('#trigger-session');
 
 var profileOpen = false;
@@ -10,7 +11,20 @@ joinSession.click(function() {
     } else {
         socket.emit('session leave', { id: localStorage.userID });
     }
+});
 
+autoJoinSession.click(function() {
+    sessionAutoJoin = !sessionAutoJoin;
+    if (sessionAutoJoin) {
+        //TODO Show spinner, hide join button, change auto text
+        autoJoinSession.text("Cancel Auto-Join");
+        sessionStatus.sessionAutoJoin();
+        $('.session-buttons .fa').attr('style', 'display: inline-block;');
+    } else {
+        $('.session-buttons .fa').hide();
+        autoJoinSession.text("Auto-Join Session");
+        sessionStatus.sessionUnavailable();
+    }
 });
 
 triggerSession.click(function() {
@@ -58,6 +72,8 @@ socket.on('session started', function() {
         state.sessionAvailable = true;
         triggerSession.html('End Session');
     }
+    joinSession.show();
+    sessionStatus.sessionAvailable();
     if (sessionAutoJoin) {
         socket.emit('session join', {
             id: localStorage.userID
@@ -71,6 +87,9 @@ socket.on('session ended', function() {
         triggerSession.html('Start Session');
     }
     state.session = null;
+    joinSession.hide();
+    autoJoinSession.show();
+    sessionStatus.sessionUnavailable();
     transition.sessionLeave();
 });
 
@@ -79,10 +98,13 @@ socket.on('session joined', function(data) {
     state.session = data;
     socket.emit('fetch games');
     socket.emit('fetch rounds');
+    sessionAutoJoin = false;
+    sessionStatus.lobbyNotFound();
     transition.sessionJoin();
 });
 
 socket.on('session left', function() {
     state.session = null;
+    sessionStatus.sessionAvailable();
     transition.sessionLeave();
 });

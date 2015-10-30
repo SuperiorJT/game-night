@@ -100,8 +100,6 @@ html, body {
             }
 
         }
-
-
     }
 
     .session {
@@ -208,14 +206,60 @@ html, body {
             .session-main {
                 padding: 0;
 
-                .lobby-list {
-                    text-align: center;
-                    padding: 10px;
-                    min-height: 40vh;
-                    margin-top: 15px;
+                @media (max-width: 991px) {
+                    padding: 0 15px;
                 }
 
-                #trigger-session {
+                .lobby-panel {
+                    text-align: center;
+                    padding: 10px;
+                    height: calc(60% - 10px);
+                    margin-top: 15px;
+                    position: relative;
+
+
+
+                    .lobby-status {
+                        opacity: .5;
+                        position: relative;
+                        top: calc(50% - 34px);
+                    }
+
+                    .lobby-list {
+                        display: none;
+                        position: relative;
+                        height: calc(100% - 44px);
+                        text-align: initial;
+
+                        tbody {
+                            tr:hover {
+                                background-color: #DCDCDC;
+                            }
+                        }
+                    }
+
+                    .session-buttons {
+                        position: absolute;
+                        width: 100%;
+                        bottom: 10px;
+                        left: 0;
+
+                        .fa {
+                            display: none;
+                            padding: 1px;
+                        }
+                    }
+                }
+
+                .activity-panel {
+                    position: relative;
+                    height: calc(40% - 10px);
+                    @media (max-width: 991px) {
+                        height: calc(24% - 10px);
+                    }
+                }
+
+                #trigger-session, #join-session {
                     display: none;
                 }
 

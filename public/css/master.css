@@ -182,12 +182,41 @@ html, body {
         background-color: black; }
     .content .session .row .session-main {
       padding: 0; }
-      .content .session .row .session-main .lobby-list {
+      @media (max-width: 991px) {
+        .content .session .row .session-main {
+          padding: 0 15px; } }
+      .content .session .row .session-main .lobby-panel {
         text-align: center;
         padding: 10px;
-        min-height: 40vh;
-        margin-top: 15px; }
-      .content .session .row .session-main #trigger-session {
+        height: calc(60% - 10px);
+        margin-top: 15px;
+        position: relative; }
+        .content .session .row .session-main .lobby-panel .lobby-status {
+          opacity: .5;
+          position: relative;
+          top: calc(50% - 34px); }
+        .content .session .row .session-main .lobby-panel .lobby-list {
+          display: none;
+          position: relative;
+          height: calc(100% - 44px);
+          text-align: initial; }
+          .content .session .row .session-main .lobby-panel .lobby-list tbody tr:hover {
+            background-color: #DCDCDC; }
+        .content .session .row .session-main .lobby-panel .session-buttons {
+          position: absolute;
+          width: 100%;
+          bottom: 10px;
+          left: 0; }
+          .content .session .row .session-main .lobby-panel .session-buttons .fa {
+            display: none;
+            padding: 1px; }
+      .content .session .row .session-main .activity-panel {
+        position: relative;
+        height: calc(40% - 10px); }
+        @media (max-width: 991px) {
+          .content .session .row .session-main .activity-panel {
+            height: calc(24% - 10px); } }
+      .content .session .row .session-main #trigger-session, .content .session .row .session-main #join-session {
         display: none; }
 
 .profile-mobile-row {

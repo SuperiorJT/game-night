@@ -47,6 +47,10 @@ var transition = {
     sessionJoin: function() {
         console.log("session join transition");
         $('#join-session').html('Leave Session');
+        $('#join-session').show();
+        $('#auto-join-session').hide();
+        $('#auto-join-session').text("Auto-Join Session");
+        $('.session-buttons .fa').hide();
     },
 
     sessionLeave: function() {
@@ -56,6 +60,25 @@ var transition = {
 
     sessionFrom: function() {
 
+    }
+};
+
+var sessionStatus = {
+
+    sessionAvailable: function() {
+        $('.lobby-status').text('Join current session to view lobbies');
+    },
+
+    sessionUnavailable: function() {
+        $('.lobby-status').text('No sessions in progress');
+    },
+
+    sessionAutoJoin: function() {
+        $('.lobby-status').text('Waiting to join next available session');
+    },
+
+    lobbyNotFound: function() {
+        $('.lobby-status').text('There are no active lobbies in this session');
     }
 
 };
@@ -90,6 +113,9 @@ socket.on('logged in', function(data) {
     state.sessionAvailable = data.session;
     if (state.sessionAvailable) {
         $('#trigger-session').html('End Session');
+        sessionStatus.sessionAvailable();
+    } else {
+
     }
     if (state.session || state.user.session) {
         socket.emit('session join', {

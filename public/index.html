@@ -63,14 +63,43 @@
                             <div class="profile-divider"></div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-4 col-lg-6 session-main">
-                        <div class="col-xs-12">
-                            <div class="panel lobby-list">
-                                <div class="session-buttons">
-                                    <button type="button" name="joinSession" class="btn btn-default" id="join-session">Join Session</button>
-                                    <button type="button" name="createSession" class="btn btn-default" id="trigger-session">Start Session</button>
-                                </div>
+                    <div class="col-xs-12 col-md-4 col-lg-6 session-main session-stretch">
+                        <div class="panel lobby-panel">
+                            <div class="lobby-status">
+                                There are no sessions in progress
                             </div>
+                            <table class="table table-bordered table-hover lobby-list">
+                                <thead>
+                                    <tr>
+                                        <th class="lobby-table-id">
+                                            ID
+                                        </th>
+                                        <th class="lobby-table-game">
+                                            Game
+                                        </th>
+                                        <th class="lobby-table-admin">
+                                            Lobby Admin
+                                        </th>
+                                        <th class="lobby-table-status">
+                                            Status
+                                        </th>
+                                        <th class="lobby-table-time">
+                                            Time
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <div class="session-buttons">
+                                <span class="fa fa-circle-o-notch fa-spin"></span>
+                                <button type="button" name="autoJoinSession" class="btn btn-default" id="auto-join-session">Auto-Join Session</button>
+                                <button type="button" name="joinSession" class="btn btn-default" id="join-session">Join Session</button>
+                                <button type="button" name="createSession" class="btn btn-default" id="trigger-session">Start Session</button>
+                            </div>
+                        </div>
+                        <div class="panel activity-panel">
+
                         </div>
                     </div>
                 </div>
