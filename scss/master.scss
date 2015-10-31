@@ -119,6 +119,20 @@ html, body {
                 height: 100%;
                 position: relative;
 
+                .profile-logout {
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    padding: 5px;
+                    margin: 5px;
+                    height: 27px;
+                    z-index: 3;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+
                 .profile-container {
 
                     position: relative;
@@ -201,6 +215,12 @@ html, body {
                     margin: 10px 0;
                     background-color: black;
                 }
+
+                .user-list {
+                    thead th {
+                        text-align: center;
+                    }
+                }
             }
 
             .session-main {
@@ -259,7 +279,7 @@ html, body {
                     }
                 }
 
-                #trigger-session, #join-session {
+                #trigger-session, #join-session, #create-lobby {
                     display: none;
                 }
 
@@ -284,12 +304,19 @@ html, body {
         box-shadow: 0 -6px 0 0 rgba(0, 0, 0, 0.2);
 
         .profile-mobile-close {
-            display: inline-block;
+            display: none;
             position: absolute;
             padding: 10px;
             right: 0;
             top: 0;
-            opacity: 0;
+        }
+
+        .profile-logout {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 40px;
+            padding: 10px;
         }
 
         .profile-container {

@@ -122,6 +122,16 @@ html, body {
       padding: 10px;
       height: 100%;
       position: relative; }
+      .content .session .row .profile .profile-logout {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 5px;
+        margin: 5px;
+        height: 27px;
+        z-index: 3; }
+        .content .session .row .profile .profile-logout:hover {
+          cursor: pointer; }
       .content .session .row .profile .profile-container {
         position: relative;
         width: 100%; }
@@ -180,6 +190,8 @@ html, body {
         height: 1px;
         margin: 10px 0;
         background-color: black; }
+      .content .session .row .profile .user-list thead th {
+        text-align: center; }
     .content .session .row .session-main {
       padding: 0; }
       @media (max-width: 991px) {
@@ -216,7 +228,7 @@ html, body {
         @media (max-width: 991px) {
           .content .session .row .session-main .activity-panel {
             height: calc(24% - 10px); } }
-      .content .session .row .session-main #trigger-session, .content .session .row .session-main #join-session {
+      .content .session .row .session-main #trigger-session, .content .session .row .session-main #join-session, .content .session .row .session-main #create-lobby {
         display: none; }
 
 .profile-mobile-row {
@@ -232,12 +244,17 @@ html, body {
     -moz-box-shadow: 0 -6px 0 0 rgba(0, 0, 0, 0.2);
     box-shadow: 0 -6px 0 0 rgba(0, 0, 0, 0.2); }
     .profile-mobile-row .profile-mobile .profile-mobile-close {
-      display: inline-block;
+      display: none;
       position: absolute;
       padding: 10px;
       right: 0;
+      top: 0; }
+    .profile-mobile-row .profile-mobile .profile-logout {
+      display: none;
+      position: absolute;
       top: 0;
-      opacity: 0; }
+      right: 40px;
+      padding: 10px; }
     .profile-mobile-row .profile-mobile .profile-container {
       position: relative;
       height: calc(14vh - 10px); }

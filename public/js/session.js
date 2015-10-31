@@ -1,6 +1,7 @@
 var joinSession = $('#join-session');
 var autoJoinSession = $('#auto-join-session');
 var triggerSession = $('#trigger-session');
+var createLobby = $('#create-lobby');
 
 var profileOpen = false;
 
@@ -46,9 +47,8 @@ $('.profile-container').click(function() {
         $('.profile-mobile').velocity({
             backgroundColorAlpha: 1
         });
-        $('.profile-mobile-close').velocity({
-            opacity: 1
-        });
+        $('.profile-mobile-close').attr('style', 'display: inline-block').hide().fadeIn();
+        $('.profile-logout').attr('style', 'display: inline-block').hide().fadeIn();
     }
 });
 
@@ -61,10 +61,31 @@ $('.profile-mobile-close').click(function() {
         $('.profile-mobile').velocity({
             backgroundColorAlpha: 0.7
         });
-        $('.profile-mobile-close').velocity({
-            opacity: 0
-        });
+        $('.profile-mobile-close').fadeOut();
+        $('.profile-logout').fadeOut();
     }
+});
+
+$('.profile-logout').click(function() {
+    console.log('derp');
+    delete localStorage.userID;
+    socket.emit('logout', state.user);
+});
+
+socket.on('logged out', function() {
+    console.log('derp');
+    state = {
+        online : false,
+        admin : false,
+        session : null,
+        sessionAvailable : false,
+        games : [],
+        rounds : [],
+        round : null,
+        user : null,
+        users : []
+    };
+    transition.sessionToLogin();
 });
 
 socket.on('session started', function() {
@@ -72,6 +93,7 @@ socket.on('session started', function() {
         state.sessionAvailable = true;
         triggerSession.html('End Session');
     }
+    autoJoinSession.hide();
     joinSession.show();
     sessionStatus.sessionAvailable();
     if (sessionAutoJoin) {
@@ -88,6 +110,7 @@ socket.on('session ended', function() {
     }
     state.session = null;
     joinSession.hide();
+    createLobby.hide();
     autoJoinSession.show();
     sessionStatus.sessionUnavailable();
     transition.sessionLeave();
@@ -96,15 +119,20 @@ socket.on('session ended', function() {
 socket.on('session joined', function(data) {
     console.log(data);
     state.session = data;
+    socket.emit('fetch users');
     socket.emit('fetch games');
     socket.emit('fetch rounds');
     sessionAutoJoin = false;
+    if (state.admin) {
+        createLobby.show();
+    }
     sessionStatus.lobbyNotFound();
     transition.sessionJoin();
 });
 
 socket.on('session left', function() {
     state.session = null;
+    createLobby.hide();
     sessionStatus.sessionAvailable();
     transition.sessionLeave();
 });

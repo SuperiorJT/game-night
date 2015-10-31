@@ -44,6 +44,9 @@
                 <div class="row session-stretch">
                     <div class="col-md-4 col-lg-3 hidden-xs hidden-sm session-stretch">
                         <div class="profile panel">
+                            <div class="profile-logout">
+                                <span class="fa fa-sign-out fa-rotate-180"></span>
+                            </div>
                             <div class="profile-container">
                                 <div class="avatar">
                                     <img src="images/question_block.png" class="avatar-image img-responsive img-thumbnail" />
@@ -61,6 +64,18 @@
                                 </div>
                             </div>
                             <div class="profile-divider"></div>
+                            <table class="table table-bordered user-list">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Current Players
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-4 col-lg-6 session-main session-stretch">
@@ -94,6 +109,7 @@
                             <div class="session-buttons">
                                 <span class="fa fa-circle-o-notch fa-spin"></span>
                                 <button type="button" name="autoJoinSession" class="btn btn-default" id="auto-join-session">Auto-Join Session</button>
+                                <button type="button" name="createLobby" class="btn btn-default" id="create-lobby">Create Lobby</button>
                                 <button type="button" name="joinSession" class="btn btn-default" id="join-session">Join Session</button>
                                 <button type="button" name="createSession" class="btn btn-default" id="trigger-session">Start Session</button>
                             </div>
@@ -120,6 +136,9 @@
                                     <div class="exp-rank">1</div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="profile-logout">
+                            <span class="fa fa-sign-out fa-rotate-180"></span>
                         </div>
                         <div class="profile-mobile-close">
                             <span class="fa fa-chevron-down"></span>

@@ -74,6 +74,16 @@ module.exports = function(io) {
             console.log(socket.request.connection.remoteAddress + " has reconnected to the server. id: " + socket.id);
         });
 
+        socket.on('logout', function(user) {
+            users.updateState(user.id, false, null, null);
+            cache.users = cache.users.filter(function(val) {
+                return val.id != user.id;
+            });
+            console.log(user.username + " has left the server!");
+            socket.emit('logged out');
+            io.emit('users updated', user.username + "left the game night server!");
+        });
+
         socket.on('fetch users', function() {
             if (cache.session.id) {
                 socket.to('session room ' + cache.session.id).emit('receive users', cache.users.filter(function(val) {

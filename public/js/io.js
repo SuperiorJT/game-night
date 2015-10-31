@@ -8,7 +8,8 @@ var state = {
     games : [],
     rounds : [],
     round : null,
-    user : null
+    user : null,
+    users : []
 };
 
 var sessionAutoJoin = false;
@@ -58,8 +59,13 @@ var transition = {
         $('#join-session').html('Join Session');
     },
 
-    sessionFrom: function() {
-
+    sessionToLogin: function() {
+        console.log("sessionFrom transition");
+        if (state.admin) {
+            $('#trigger-session').hide();
+        }
+        $('.session').fadeOut();
+        transition.loginTo();
     }
 };
 
