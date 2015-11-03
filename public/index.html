@@ -117,6 +117,30 @@
                         <div class="panel activity-panel">
 
                         </div>
+                        <div class="panel lobby-active-panel">
+                            <div class="lobby-active-status">
+                                <div class="lobby-leader">Lobby Leader: <span class="lobby-leader-value"></span></div>
+                                <div class="lobby-game">Game: <span class="lobby-game-value"></span></div>
+                                <div class="lobby-status">Status: <span class="lobby-status-value"></span></div>
+                            </div>
+                            <table class="table table-bordered table-hover lobby-players">
+                                <thead>
+                                    <tr>
+                                        <th class="lobby-players-name">
+                                            Name
+                                        </th>
+                                        <th class="lobby-players-rank">
+                                            Level
+                                        </th>
+                                        <th class="lobby-players-skill">
+                                            Skill
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="row profile-mobile-row visible-xs-block visible-sm-block">
@@ -154,6 +178,12 @@
             <div class="notifications-list"></div>
         </div>
 
+        <div class="popup col-xs-12">
+            <div class="popup-content panel">
+
+            </div>
+        </div>
+
         <script src="components/jquery/jquery.js"></script>
         <script src="components/velocity/velocity.js"></script>
         <script src="js/bootstrap.min.js"></script>
@@ -162,6 +192,7 @@
         <script src="js/notifications.js"></script>
         <script src="js/io.js"></script>
         <script src="js/login.js"></script>
+        <script src="js/profile-panel.js"></script>
         <script src="js/session.js"></script>
     </body>
 </html>

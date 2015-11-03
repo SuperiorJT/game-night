@@ -9,7 +9,6 @@ module.exports.init = function(conn) {
         var user = cache.users.filter(function(val) {
             return val.id == data.id;
         })[0];
-        console.log(cache.users);
         if (user.admin) {
             sessions.start(data, function(err, reply) {
                 if (err) {
@@ -32,11 +31,13 @@ module.exports.init = function(conn) {
                 notify.fail(conn.socket, reply.msg, reply.data);
                 conn.socket.emit('session join failed', null);
             } else {
-                client.hget('user:' + data.id, 'username', function(err, reply) {
-                    conn.socket.emit('session joined', cache.session);
-                    conn.socket.join('session room ' + cache.session.id);
-                    notify.success(conn.io, reply + " joined the session!", null);
-                });
+                var user = cache.users.filter(function(val) {
+                    return val.id == data.id;
+                })[0];
+                conn.socket.emit('session joined', cache.session);
+                conn.io.to('session room ' + cache.session.id).emit('session user joined', user);
+                conn.socket.join('session room ' + cache.session.id);
+                notify.neutral(conn.io.to('session room ' + cache.session.id), user.username + " joined the session!", null);
             }
         });
     });
@@ -47,11 +48,13 @@ module.exports.init = function(conn) {
                 notify.fail(conn.socket, reply.msg, reply.data);
                 conn.socket.emit('session leave failed', null);
             } else {
-                client.hget('user:' + data.id, 'username', function(err, reply) {
-                    conn.socket.emit('session left', null);
-                    conn.socket.leave('session room ' + cache.session.id);
-                    notify.success(conn.io, reply + " left the session!", null);
-                });
+                var user = cache.users.filter(function(val) {
+                    return val.id == data.id;
+                })[0];
+                conn.socket.emit('session left', null);
+                conn.socket.leave('session room ' + cache.session.id);
+                conn.io.to('session room ' + cache.session.id).emit('session user left', user);
+                notify.success(conn.io, user.username + " left the session!", null);
             }
         });
     });

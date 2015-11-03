@@ -73,6 +73,8 @@ var sessionStatus = {
 
     sessionAvailable: function() {
         $('.lobby-status').text('Join current session to view lobbies');
+        $('#auto-join-session').hide();
+        $('#join-session').show();
     },
 
     sessionUnavailable: function() {
@@ -120,14 +122,11 @@ socket.on('logged in', function(data) {
     if (state.sessionAvailable) {
         $('#trigger-session').html('End Session');
         sessionStatus.sessionAvailable();
-    } else {
-
     }
     if (state.session || state.user.session) {
         socket.emit('session join', {
             id: localStorage.userID
         });
-        socket.emit('fetch all');
     }
     transition.loginFrom();
 });

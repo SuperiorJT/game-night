@@ -228,6 +228,8 @@ html, body {
         @media (max-width: 991px) {
           .content .session .row .session-main .activity-panel {
             height: calc(24% - 10px); } }
+      .content .session .row .session-main .lobby-active-panel {
+        display: none; }
       .content .session .row .session-main #trigger-session, .content .session .row .session-main #join-session, .content .session .row .session-main #create-lobby {
         display: none; }
 
@@ -316,6 +318,24 @@ html, body {
       height: 1px;
       margin: 10px 0;
       background-color: black; }
+
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 5;
+  background-color: rgba(0, 0, 0, 0.6); }
+  .popup .popup-content {
+    position: relative;
+    padding: 15px;
+    margin: 0 auto;
+    top: 12.5%;
+    height: 70%;
+    width: 50%;
+    background-color: whitesmoke; }
 
 .vertical-align {
   display: flex;

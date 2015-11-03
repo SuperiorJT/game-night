@@ -50,8 +50,6 @@ module.exports.join = function(data, callback) {
                     cache.session.attendees.push(data.id);
                     client.hset('session:' + cache.session.id, 'attendees', JSON.stringify(cache.session.attendees));
                 }
-                console.log("real-sessionID: " + cache.session.id);
-                console.log(reply);
                 users.updateState(reply.id, null, cache.session.id, null);
                 callback(true);
             }

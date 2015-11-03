@@ -279,6 +279,10 @@ html, body {
                     }
                 }
 
+                .lobby-active-panel {
+                    display: none;
+                }
+
                 #trigger-session, #join-session, #create-lobby {
                     display: none;
                 }
@@ -408,6 +412,27 @@ html, body {
             background-color: black;
         }
 
+    }
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 5;
+    background-color: rgba(0, 0, 0, 0.6);
+
+    .popup-content {
+        position: relative;
+        padding: 15px;
+        margin: 0 auto;
+        top: 12.5%;
+        height: 70%;
+        width: 50%;
+        background-color: rgba(245, 245, 245, 1);
     }
 }
 

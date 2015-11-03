@@ -98,5 +98,15 @@ module.exports = function(io) {
         rounds.init(conn);
         games.init(conn);
 
+        socket.on('fetch all', function() {
+            console.log("fetching for " + socket.id);
+            if (cache.session.id) {
+                socket.emit('receive users', cache.users.filter(function(val) {
+                    return val.session == cache.session.id;
+                }));
+            }
+            socket.emit('receive rounds', cache.rounds);
+        });
+
     });
 };

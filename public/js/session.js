@@ -6,7 +6,6 @@ var createLobby = $('#create-lobby');
 var profileOpen = false;
 
 joinSession.click(function() {
-    console.log(state.session);
     if (!state.session) {
         socket.emit('session join', { id: localStorage.userID });
     } else {
@@ -29,12 +28,27 @@ autoJoinSession.click(function() {
 });
 
 triggerSession.click(function() {
-    console.log(state.sessionAvailable);
     if (state.sessionAvailable) {
         socket.emit('session end', { id: localStorage.userID });
     } else {
-        console.log(socket);
         socket.emit('session start', { id: localStorage.userID });
+    }
+});
+
+createLobby.click(function() {
+    if (state.admin) {
+        if (state.round) {
+
+        } else {
+            $('.popup').fadeIn('fast');
+            $('.popup').click(function() {
+                $(this).fadeOut('fast');
+            });
+            $('.popup-content').click(function(e) {
+                e.stopPropagation();
+            });
+            $('.popup-content').load('templates/popup-create-lobby.html');
+        }
     }
 });
 
@@ -67,13 +81,11 @@ $('.profile-mobile-close').click(function() {
 });
 
 $('.profile-logout').click(function() {
-    console.log('derp');
     delete localStorage.userID;
     socket.emit('logout', state.user);
 });
 
 socket.on('logged out', function() {
-    console.log('derp');
     state = {
         online : false,
         admin : false,
@@ -112,16 +124,14 @@ socket.on('session ended', function() {
     joinSession.hide();
     createLobby.hide();
     autoJoinSession.show();
+    clearUserList();
     sessionStatus.sessionUnavailable();
     transition.sessionLeave();
 });
 
 socket.on('session joined', function(data) {
-    console.log(data);
     state.session = data;
-    socket.emit('fetch users');
-    socket.emit('fetch games');
-    socket.emit('fetch rounds');
+    socket.emit('fetch all');
     sessionAutoJoin = false;
     if (state.admin) {
         createLobby.show();
@@ -133,6 +143,7 @@ socket.on('session joined', function(data) {
 socket.on('session left', function() {
     state.session = null;
     createLobby.hide();
+    clearUserList();
     sessionStatus.sessionAvailable();
     transition.sessionLeave();
 });
