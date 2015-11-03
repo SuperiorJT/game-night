@@ -104,10 +104,8 @@ module.exports.checkStatus = function(id, callback) {
 
 module.exports.updateState = function(id, online, sessionId, lobbyId) {
     client.smembers('users', function(err, reply) {
-        console.log(cache.users);
         reply.some(function(val) {
             if (id == JSON.parse(val).id) {
-                console.log("userID: " + id);
                 var index = null;
                 cache.users.some(function(val, i) {
                     if (val.id == id) {
@@ -117,19 +115,19 @@ module.exports.updateState = function(id, online, sessionId, lobbyId) {
                     return false;
                 });
                 if (online != null) {
-                    if (index) {
+                    if (index != null) {
                         cache.users[index].online = online;
                     }
                     client.hset('user:' + id, 'online', online);
                 }
                 if (lobbyId != null) {
-                    if (index) {
+                    if (index != null) {
                         cache.users[index].lobby = lobbyId;
                     }
                     client.hset('user:' + id, 'lobby', lobbyId);
                 }
                 if (sessionId != null) {
-                    if (index) {
+                    if (index != null) {
                         cache.users[index].session = sessionId;
                     }
                     console.log("sessionID: " + sessionId);
@@ -139,6 +137,5 @@ module.exports.updateState = function(id, online, sessionId, lobbyId) {
             }
             return false;
         });
-        console.log(cache.users);
     });
 };
