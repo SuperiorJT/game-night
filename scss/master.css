@@ -1,0 +1,474 @@
+/* line 1, /Users/brandongroff/Documents/game-night/scss/_notifications.scss */
+.notifications {
+  position: fixed;
+  display: inline-block;
+  padding: 0;
+  top: 0;
+  right: 0; }
+  /* line 9, /Users/brandongroff/Documents/game-night/scss/_notifications.scss */
+  .notifications > div {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    padding: 0 15px;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden; }
+    /* line 18, /Users/brandongroff/Documents/game-night/scss/_notifications.scss */
+    .notifications > div div {
+      flex: 1;
+      position: relative;
+      padding: 5px 30px 5px 8px;
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid; }
+      @media (max-width: 768px) {
+        /* line 18, /Users/brandongroff/Documents/game-night/scss/_notifications.scss */
+        .notifications > div div {
+          font-size: 8pt; } }
+      @media (min-width: 768px) and (max-width: 992px) {
+        /* line 18, /Users/brandongroff/Documents/game-night/scss/_notifications.scss */
+        .notifications > div div {
+          font-size: 10pt; } }
+      /* line 34, /Users/brandongroff/Documents/game-night/scss/_notifications.scss */
+      .notifications > div div i {
+        position: absolute;
+        top: 5px;
+        right: 10px; }
+        @media (max-width: 992px) {
+          /* line 34, /Users/brandongroff/Documents/game-night/scss/_notifications.scss */
+          .notifications > div div i {
+            top: calc(50% - 8px); } }
+        /* line 43, /Users/brandongroff/Documents/game-night/scss/_notifications.scss */
+        .notifications > div div i:hover {
+          cursor: pointer;
+          opacity: .5; }
+
+@font-face {
+  font-family: 'VisitorTT1BRK';
+  src: url("../fonts/VisitorTT1BRK.woff") format("woff"), url("../fonts/VisitorTT1BRK.ttf") format("truetype"), url("../fonts/VisitorTT1BRK.svg#VisitorTT1BRK") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'visitor1';
+  src: url("../fonts/visitor1.eot");
+  src: url("../fonts/visitor1.eot?#iefix") format("embedded-opentype"), url("../fonts/visitor1.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal; }
+
+/* line 18, /Users/brandongroff/Documents/game-night/scss/master.scss */
+html,
+body {
+  font-family: 'visitor1', 'VisitorTT1BRK', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  height: 100%;
+  position: relative; }
+
+/* line 24, /Users/brandongroff/Documents/game-night/scss/master.scss */
+.test {
+  z-index: 50;
+  position: fixed;
+  bottom: 0; }
+
+/* line 30, /Users/brandongroff/Documents/game-night/scss/master.scss */
+.disable-scroll {
+  overflow-x: hidden;
+  overflow-y: hidden; }
+
+@keyframes animatedBackground {
+  from {
+    transform: translateX(0); }
+  to {
+    transform: translateX(-20000000px); } }
+
+/* line 44, /Users/brandongroff/Documents/game-night/scss/master.scss */
+.bg {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  overflow: hidden; }
+  /* line 49, /Users/brandongroff/Documents/game-night/scss/master.scss */
+  .bg .bg-0 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 3000000%;
+    height: 20vh;
+    background: url("../images/mario-ground.png");
+    background-size: auto 20vh;
+    background-position: 0px 0px;
+    background-repeat: repeat-x;
+    animation-name: animatedBackground;
+    animation-duration: 200000s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite; }
+  /* line 64, /Users/brandongroff/Documents/game-night/scss/master.scss */
+  .bg .bg-1 {
+    position: absolute;
+    bottom: 20vh;
+    width: 3000000%;
+    height: 50vh;
+    background-image: url("../images/mario-hills.png");
+    background-size: auto 50vh;
+    background-position: 0px 0px;
+    background-repeat: repeat-x;
+    animation-name: animatedBackground;
+    animation-duration: 200000s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite; }
+
+/* line 80, /Users/brandongroff/Documents/game-night/scss/master.scss */
+.content {
+  height: 100%; }
+  /* line 82, /Users/brandongroff/Documents/game-night/scss/master.scss */
+  .content .login {
+    display: none;
+    min-height: 100%; }
+    /* line 86, /Users/brandongroff/Documents/game-night/scss/master.scss */
+    .content .login form label[for="username"] {
+      display: none; }
+    /* line 89, /Users/brandongroff/Documents/game-night/scss/master.scss */
+    .content .login form input[type="submit"] {
+      width: calc(50% - 5px); }
+  /* line 94, /Users/brandongroff/Documents/game-night/scss/master.scss */
+  .content .session {
+    display: none;
+    height: 100%;
+    flex-direction: column; }
+    /* line 98, /Users/brandongroff/Documents/game-night/scss/master.scss */
+    .content .session .session-stretch {
+      height: calc(100% - 15px); }
+    /* line 102, /Users/brandongroff/Documents/game-night/scss/master.scss */
+    .content .session .row .profile {
+      margin-top: 15px;
+      padding: 10px;
+      height: 100%;
+      position: relative; }
+      /* line 107, /Users/brandongroff/Documents/game-night/scss/master.scss */
+      .content .session .row .profile .profile-logout {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 5px;
+        margin: 5px;
+        height: 27px;
+        z-index: 3; }
+        /* line 115, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .content .session .row .profile .profile-logout:hover {
+          cursor: pointer; }
+      /* line 119, /Users/brandongroff/Documents/game-night/scss/master.scss */
+      .content .session .row .profile .profile-container {
+        position: relative;
+        width: 100%; }
+        /* line 122, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .content .session .row .profile .profile-container div {
+          display: inline-block; }
+        /* line 125, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .content .session .row .profile .profile-container .avatar {
+          width: 25%;
+          padding-right: 10px; }
+        /* line 129, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .content .session .row .profile .profile-container .profile-section-exp {
+          height: 100%;
+          width: 75%;
+          position: absolute; }
+          /* line 133, /Users/brandongroff/Documents/game-night/scss/master.scss */
+          .content .session .row .profile .profile-container .profile-section-exp .username {
+            display: block;
+            height: 25%;
+            position: relative;
+            font-size: 14pt;
+            font-size: 150%;
+            line-height: 1em; }
+          /* line 141, /Users/brandongroff/Documents/game-night/scss/master.scss */
+          .content .session .row .profile .profile-container .profile-section-exp .rank {
+            position: relative;
+            top: -4px;
+            height: 25%;
+            font-size: 9pt;
+            font-size: 85%; }
+          /* line 148, /Users/brandongroff/Documents/game-night/scss/master.scss */
+          .content .session .row .profile .profile-container .profile-section-exp .exp {
+            position: relative;
+            top: -10%;
+            height: 50%;
+            display: block; }
+            /* line 153, /Users/brandongroff/Documents/game-night/scss/master.scss */
+            .content .session .row .profile .profile-container .profile-section-exp .exp .exp-value {
+              position: absolute;
+              display: inline-block;
+              font-size: 8pt;
+              font-size: 75%;
+              height: 25%; }
+            /* line 160, /Users/brandongroff/Documents/game-night/scss/master.scss */
+            .content .session .row .profile .profile-container .profile-section-exp .exp .exp-bar {
+              border: 1px solid black;
+              height: 55%;
+              width: 85%;
+              bottom: 0;
+              position: absolute; }
+              /* line 166, /Users/brandongroff/Documents/game-night/scss/master.scss */
+              .content .session .row .profile .profile-container .profile-section-exp .exp .exp-bar .exp-fill {
+                height: 100%;
+                width: 0%;
+                background-color: black; }
+            /* line 172, /Users/brandongroff/Documents/game-night/scss/master.scss */
+            .content .session .row .profile .profile-container .profile-section-exp .exp .exp-rank {
+              position: absolute;
+              right: 0;
+              bottom: 0;
+              height: 55%;
+              width: 11%; }
+      /* line 182, /Users/brandongroff/Documents/game-night/scss/master.scss */
+      .content .session .row .profile .profile-divider {
+        display: block;
+        position: relative;
+        height: 1px;
+        margin: 10px 0;
+        background-color: black; }
+      /* line 190, /Users/brandongroff/Documents/game-night/scss/master.scss */
+      .content .session .row .profile .user-list thead th {
+        text-align: center; }
+    /* line 195, /Users/brandongroff/Documents/game-night/scss/master.scss */
+    .content .session .row .session-main {
+      padding: 0; }
+      @media (max-width: 991px) {
+        /* line 195, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .content .session .row .session-main {
+          padding: 0 15px; } }
+      /* line 200, /Users/brandongroff/Documents/game-night/scss/master.scss */
+      .content .session .row .session-main .lobby-panel {
+        text-align: center;
+        padding: 10px;
+        height: calc(60% - 10px);
+        margin-top: 15px;
+        position: relative; }
+        /* line 206, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .content .session .row .session-main .lobby-panel .lobby-status {
+          opacity: .5;
+          position: relative;
+          top: calc(50% - 34px); }
+        /* line 211, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .content .session .row .session-main .lobby-panel .lobby-list {
+          display: none;
+          position: relative;
+          height: calc(100% - 44px);
+          text-align: initial; }
+          /* line 217, /Users/brandongroff/Documents/game-night/scss/master.scss */
+          .content .session .row .session-main .lobby-panel .lobby-list tbody tr:hover {
+            background-color: #DCDCDC; }
+        /* line 222, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .content .session .row .session-main .lobby-panel .session-buttons {
+          position: absolute;
+          width: 100%;
+          bottom: 10px;
+          left: 0; }
+          /* line 227, /Users/brandongroff/Documents/game-night/scss/master.scss */
+          .content .session .row .session-main .lobby-panel .session-buttons .fa {
+            display: none;
+            padding: 1px; }
+      /* line 233, /Users/brandongroff/Documents/game-night/scss/master.scss */
+      .content .session .row .session-main .activity-panel {
+        position: relative;
+        height: calc(40% - 10px); }
+        @media (max-width: 991px) {
+          /* line 233, /Users/brandongroff/Documents/game-night/scss/master.scss */
+          .content .session .row .session-main .activity-panel {
+            height: calc(24% - 10px); } }
+        /* line 239, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .content .session .row .session-main .activity-panel .activity-panel-header {
+          text-align: center;
+          font-size: 26px; }
+        /* line 243, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .content .session .row .session-main .activity-panel .activity-panel-notification {
+          display: block;
+          position: relative;
+          width: 100%;
+          background-color: #F4CDA1;
+          opacity: 0.5; }
+          /* line 249, /Users/brandongroff/Documents/game-night/scss/master.scss */
+          .content .session .row .session-main .activity-panel .activity-panel-notification .notification-content {
+            display: inline-block;
+            width: calc(100% - 40px);
+            height: auto;
+            margin-left: 0; }
+            /* line 254, /Users/brandongroff/Documents/game-night/scss/master.scss */
+            .content .session .row .session-main .activity-panel .activity-panel-notification .notification-content .notification-game {
+              font-size: 22px;
+              margin-top: 0;
+              margin-bottom: 0;
+              padding-bottom: 0;
+              padding-top: 0;
+              margin-left: 10px;
+              opacity: 1; }
+            /* line 263, /Users/brandongroff/Documents/game-night/scss/master.scss */
+            .content .session .row .session-main .activity-panel .activity-panel-notification .notification-content .notification-title {
+              font-size: 18px;
+              margin-top: 0;
+              margin-bottom: 0;
+              padding-bottom: 0;
+              padding-top: 0;
+              margin-left: 10px;
+              opacity: 1; }
+            /* line 272, /Users/brandongroff/Documents/game-night/scss/master.scss */
+            .content .session .row .session-main .activity-panel .activity-panel-notification .notification-content .notification-info {
+              font-size: 12px;
+              margin-top: 0;
+              margin-bottom: 0;
+              padding-bottom: 0;
+              padding-top: 0;
+              margin-left: 10px;
+              opacity: 1; }
+          /* line 282, /Users/brandongroff/Documents/game-night/scss/master.scss */
+          .content .session .row .session-main .activity-panel .activity-panel-notification .notification-next {
+            margin-right: 0;
+            display: inline-block;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.6;
+            background-color: lightgray; }
+            /* line 290, /Users/brandongroff/Documents/game-night/scss/master.scss */
+            .content .session .row .session-main .activity-panel .activity-panel-notification .notification-next img {
+              opacity: 1.0; }
+      /* line 297, /Users/brandongroff/Documents/game-night/scss/master.scss */
+      .content .session .row .session-main .lobby-active-panel {
+        display: none; }
+      /* line 302, /Users/brandongroff/Documents/game-night/scss/master.scss */
+      .content .session .row .session-main #trigger-session,
+      .content .session .row .session-main #join-session,
+      .content .session .row .session-main #create-lobby {
+        display: none; }
+
+/* line 310, /Users/brandongroff/Documents/game-night/scss/master.scss */
+.profile-mobile-row {
+  display: block;
+  position: absolute;
+  top: 86vh;
+  width: 100%; }
+  /* line 315, /Users/brandongroff/Documents/game-night/scss/master.scss */
+  .profile-mobile-row .profile-mobile {
+    position: relative;
+    height: 100vh;
+    padding: 5px;
+    -webkit-box-shadow: 0 -6px 0 0 rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 -6px 0 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 -6px 0 0 rgba(0, 0, 0, 0.2); }
+    /* line 322, /Users/brandongroff/Documents/game-night/scss/master.scss */
+    .profile-mobile-row .profile-mobile .profile-mobile-close {
+      display: none;
+      position: absolute;
+      padding: 10px;
+      right: 0;
+      top: 0; }
+    /* line 329, /Users/brandongroff/Documents/game-night/scss/master.scss */
+    .profile-mobile-row .profile-mobile .profile-logout {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 40px;
+      padding: 10px; }
+    /* line 336, /Users/brandongroff/Documents/game-night/scss/master.scss */
+    .profile-mobile-row .profile-mobile .profile-container {
+      position: relative;
+      height: calc(14vh - 10px); }
+      /* line 339, /Users/brandongroff/Documents/game-night/scss/master.scss */
+      .profile-mobile-row .profile-mobile .profile-container div {
+        display: inline-block; }
+      /* line 342, /Users/brandongroff/Documents/game-night/scss/master.scss */
+      .profile-mobile-row .profile-mobile .profile-container .avatar-mobile {
+        width: auto;
+        height: 100%;
+        padding-right: 5px; }
+        /* line 346, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .profile-mobile-row .profile-mobile .profile-container .avatar-mobile img {
+          height: 100%; }
+      /* line 350, /Users/brandongroff/Documents/game-night/scss/master.scss */
+      .profile-mobile-row .profile-mobile .profile-container .profile-mobile-section-exp {
+        height: 100%;
+        width: 75%;
+        position: absolute; }
+        /* line 354, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .profile-mobile-row .profile-mobile .profile-container .profile-mobile-section-exp .username {
+          display: block;
+          height: 25%;
+          position: relative;
+          font-size: 14pt;
+          font-size: 150%;
+          line-height: 1em; }
+        /* line 362, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .profile-mobile-row .profile-mobile .profile-container .profile-mobile-section-exp .rank {
+          position: relative;
+          top: -4px;
+          height: 25%;
+          font-size: 9pt;
+          font-size: 85%; }
+        /* line 369, /Users/brandongroff/Documents/game-night/scss/master.scss */
+        .profile-mobile-row .profile-mobile .profile-container .profile-mobile-section-exp .exp-mobile {
+          position: relative;
+          top: -10%;
+          height: 50%;
+          display: block; }
+          /* line 374, /Users/brandongroff/Documents/game-night/scss/master.scss */
+          .profile-mobile-row .profile-mobile .profile-container .profile-mobile-section-exp .exp-mobile .exp-value-mobile {
+            position: absolute;
+            display: inline-block;
+            font-size: 8pt;
+            font-size: 75%;
+            height: 25%; }
+          /* line 381, /Users/brandongroff/Documents/game-night/scss/master.scss */
+          .profile-mobile-row .profile-mobile .profile-container .profile-mobile-section-exp .exp-mobile .exp-bar-mobile {
+            border: 1px solid black;
+            height: 55%;
+            width: 85%;
+            bottom: 0;
+            position: absolute; }
+            /* line 387, /Users/brandongroff/Documents/game-night/scss/master.scss */
+            .profile-mobile-row .profile-mobile .profile-container .profile-mobile-section-exp .exp-mobile .exp-bar-mobile .exp-fill {
+              height: 100%;
+              width: 0%;
+              background-color: black; }
+          /* line 393, /Users/brandongroff/Documents/game-night/scss/master.scss */
+          .profile-mobile-row .profile-mobile .profile-container .profile-mobile-section-exp .exp-mobile .exp-rank {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            height: 55%;
+            width: 11%; }
+    /* line 403, /Users/brandongroff/Documents/game-night/scss/master.scss */
+    .profile-mobile-row .profile-mobile .profile-divider {
+      display: block;
+      position: relative;
+      height: 1px;
+      margin: 10px 0;
+      background-color: black; }
+
+/* line 413, /Users/brandongroff/Documents/game-night/scss/master.scss */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 5;
+  background-color: rgba(0, 0, 0, 0.6); }
+  /* line 422, /Users/brandongroff/Documents/game-night/scss/master.scss */
+  .popup .popup-content {
+    position: relative;
+    padding: 15px;
+    margin: 0 auto;
+    top: 12.5%;
+    height: 70%;
+    width: 50%;
+    background-color: whitesmoke; }
+
+/* line 433, /Users/brandongroff/Documents/game-night/scss/master.scss */
+.vertical-align {
+  display: flex;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  align-items: center;
+  -webkit-align-items: center;
+  -ms-align-items: center; }
+
+/*# sourceMappingURL=master.css.map */

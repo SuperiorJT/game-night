@@ -49,7 +49,8 @@
   font-weight: normal;
   font-style: normal; }
 
-html, body {
+html,
+body {
   font-family: 'visitor1', 'VisitorTT1BRK', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   height: 100%;
   position: relative; }
@@ -228,9 +229,58 @@ html, body {
         @media (max-width: 991px) {
           .content .session .row .session-main .activity-panel {
             height: calc(24% - 10px); } }
+        .content .session .row .session-main .activity-panel .activity-panel-header {
+          text-align: center;
+          font-size: 26px; }
+        .content .session .row .session-main .activity-panel .activity-panel-notification {
+          display: block;
+          position: relative;
+          width: 100%;
+          background-color: #F4CDA1;
+          opacity: 0.5; }
+          .content .session .row .session-main .activity-panel .activity-panel-notification .notification-content {
+            display: inline-block;
+            width: calc(100% - 40px);
+            height: auto;
+            margin-left: 0; }
+            .content .session .row .session-main .activity-panel .activity-panel-notification .notification-content .notification-game {
+              font-size: 22px;
+              margin-top: 0;
+              margin-bottom: 0;
+              padding-bottom: 0;
+              padding-top: 0;
+              margin-left: 10px;
+              opacity: 1; }
+            .content .session .row .session-main .activity-panel .activity-panel-notification .notification-content .notification-title {
+              font-size: 18px;
+              margin-top: 0;
+              margin-bottom: 0;
+              padding-bottom: 0;
+              padding-top: 0;
+              margin-left: 10px;
+              opacity: 1; }
+            .content .session .row .session-main .activity-panel .activity-panel-notification .notification-content .notification-info {
+              font-size: 12px;
+              margin-top: 0;
+              margin-bottom: 0;
+              padding-bottom: 0;
+              padding-top: 0;
+              margin-left: 10px;
+              opacity: 1; }
+          .content .session .row .session-main .activity-panel .activity-panel-notification .notification-next {
+            margin-right: 0;
+            display: inline-block;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.6;
+            background-color: lightgray; }
+            .content .session .row .session-main .activity-panel .activity-panel-notification .notification-next img {
+              opacity: 1.0; }
       .content .session .row .session-main .lobby-active-panel {
         display: none; }
-      .content .session .row .session-main #trigger-session, .content .session .row .session-main #join-session, .content .session .row .session-main #create-lobby {
+      .content .session .row .session-main #trigger-session,
+      .content .session .row .session-main #join-session,
+      .content .session .row .session-main #create-lobby {
         display: none; }
 
 .profile-mobile-row {
