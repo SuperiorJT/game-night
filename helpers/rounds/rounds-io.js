@@ -17,10 +17,10 @@ module.exports.init = function(conn) {
                 } else if (reply.error) {
                     notify.fail(conn.socket, reply.msg, reply.data);
                 } else {
-                    conn.socket.emit('round created', cache.rounds[cache.rounds.length - 1]);
+                    conn.socket.emit('round created', reply);
                     var round = reply;
                     client.hgetall('game:' + data.data.game, function(err, reply) {
-                        if (err) {
+                        if (err || !reply) {
                             console.log("Error grabbing game for round: " + reply.id);
                         } else {
                             console.log("Round created for " + reply.name);
@@ -43,34 +43,18 @@ module.exports.init = function(conn) {
                 notify.fail(conn.socket, reply.msg, reply.data);
                 conn.socket.emit('round join failed', null);
             } else {
-                client.hgetall('round:' + data.round, function(err, reply) {
-                    conn.socket.emit('round joined', reply);
-                    conn.socket.join('round room ' + data.round);
-                    var username = cache.users.filter(function(val) {
-                        return val.id == data.id;
-                    })[0].username;
-                    notify.neutral(conn.io.to('round room ' + cache.session.id), username + " has joined the lobby!")
-                });
+                conn.socket.emit('round joined', reply);
+                conn.socket.join('round room ' + data.round);
+                var username = cache.users.filter(function(val) {
+                    return val.id == data.id;
+                })[0].username;
+                notify.neutral(conn.io.to('round room ' + cache.session.id), username + " has joined the lobby!")
             }
         });
     });
 
     conn.socket.on('round leave', function(data) {
-        rounds.leave(data, function(reply) {
-            if (reply.error) {
-                notify.fail(conn.socket, reply.msg, reply.data);
-                conn.socket.emit('round leave failed', null);
-            } else {
-                client.hgetall('round:' + data.round, function(err, reply) {
-                    conn.socket.emit('round left', reply);
-                    conn.io.to('round room ' + data.round).emit('round left', reply);
-                    conn.socket.leave('round room ' + data.round);
-                    var username = cache.users.filter(function(val) {
-                        return val.id == data.id;
-                    })[0].username;
-                });
-            }
-        });
+        roundLeave(data);
     });
 
     conn.socket.on('round start', function(data) {
@@ -156,26 +140,63 @@ module.exports.init = function(conn) {
             return val.id == data.id;
         })[0];
         if (user.admin) {
-            rounds.close(data, function(reply) {
-                if (reply.error) {
-                    notify.fail(conn.socket, reply.msg, reply.data);
-                    conn.socket.emit('round close failed', null);
-                } else {
-                    client.hgetall('round:' + data.round, function(err, reply) {
-                        cache.users.forEach(function(val) {
-                            conn.io.sockets[val.sid].leave('round room ' + data.round);
-                        });
-                        conn.io.to('session room ' + cache.session.id).emit('round closed', reply);
-                    });
-                }
-            });
+            roundClose(data);
         } else {
             notify.fail(conn.socket, "You are not authorized to close this lobby", null);
         }
     });
 
-    conn.socket.on('fetch rounds', function(data) {
-        conn.socket.to('session room ' + cache.session.id).emit('receive rounds', cache.rounds);
+    conn.socket.on('fetch round', function(data) {
+        var round = cache.rounds.filter(function(val) {
+            return val.id == data.round;
+        })[0];
+        if (round) {
+            conn.socket.emit('receive round', round);
+        }
+
     });
 
+    conn.socket.on('fetch rounds', function(data) {
+        conn.socket.emit('receive rounds', cache.rounds);
+    });
+
+};
+
+var roundLeave = function(data, conn) {
+    rounds.leave(data, function(reply) {
+        if (reply.error) {
+            notify.fail(conn.socket, reply.msg, reply.data);
+            conn.socket.emit('round leave failed', null);
+        } else {
+            var round = reply;
+            client.hgetall('round:' + data.round, function(err, reply) {
+                conn.socket.emit('round left', reply);
+                conn.io.to('round room ' + data.round).emit('round left', reply);
+                conn.socket.leave('round room ' + data.round);
+                if (round.admin == data.id) {
+                    roundClose(data, conn);
+                }
+            });
+        }
+    });
+};
+
+var roundClose = function(data, conn) {
+    rounds.close(data, function(reply) {
+        if (reply.error) {
+            notify.fail(conn.socket, reply.msg, reply.data);
+            conn.socket.emit('round close failed', null);
+        } else {
+            client.hgetall('round:' + data.round, function(err, reply) {
+                cache.users.forEach(function(val) {
+                    if (conn.io.sockets[val.sid]) {
+                        conn.io.sockets[val.sid].leave('round room ' + data.round);
+                    }
+                });
+                conn.io.to('session room ' + cache.session.id).emit('round closed', reply);
+            });
+        }
+    });
 }
+
+module.exports.leave = roundLeave;

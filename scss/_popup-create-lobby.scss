@@ -1,0 +1,23 @@
+.create-lobby-title {
+    text-align: center;
+    font-size: 150%;
+}
+.create-lobby-form {
+    padding: 10%;
+}
+
+.dd-option-image, .dd-selected-image {
+    vertical-align: middle;
+    float: left;
+    margin-right: 10px;
+    max-height: 41px;
+}
+.dd-select {
+    border-radius: 0px;
+}
+.dd-selected {
+    background-color: white;
+}
+.dd-option-text {
+    line-height: normal !important;
+}

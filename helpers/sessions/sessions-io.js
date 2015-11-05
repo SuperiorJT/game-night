@@ -43,20 +43,7 @@ module.exports.init = function(conn) {
     });
 
     conn.socket.on('session leave', function(data) {
-        sessions.leave(data, function(reply) {
-            if (reply.error) {
-                notify.fail(conn.socket, reply.msg, reply.data);
-                conn.socket.emit('session leave failed', null);
-            } else {
-                var user = cache.users.filter(function(val) {
-                    return val.id == data.id;
-                })[0];
-                conn.socket.emit('session left', null);
-                conn.socket.leave('session room ' + cache.session.id);
-                conn.io.to('session room ' + cache.session.id).emit('session user left', user);
-                notify.success(conn.io, user.username + " left the session!", null);
-            }
-        });
+
     });
 
     conn.socket.on('session end', function(data) {
@@ -83,3 +70,22 @@ module.exports.init = function(conn) {
     });
 
 }
+
+var sessionLeave = function(data, conn) {
+    sessions.leave(data, function(reply) {
+        if (reply.error) {
+            notify.fail(conn.socket, reply.msg, reply.data);
+            conn.socket.emit('session leave failed', null);
+        } else {
+            var user = cache.users.filter(function(val) {
+                return val.id == data.id;
+            })[0];
+            conn.socket.emit('session left', null);
+            conn.socket.leave('session room ' + cache.session.id);
+            conn.io.to('session room ' + cache.session.id).emit('session user left', user);
+            notify.success(conn.io, user.username + " left the session!", null);
+        }
+    });
+}
+
+module.exports.leave = sessionLeave;

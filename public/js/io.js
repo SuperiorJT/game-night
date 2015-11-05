@@ -101,7 +101,7 @@ socket.on('connect', function() {
 });
 
 socket.on('disconnect', function() {
-    console.log("Disconnected to the game night server!");
+    console.log("Disconnected from the game night server!");
 });
 
 socket.on('reconnect', function() {
@@ -148,8 +148,18 @@ socket.on('receive rounds', function(data) {
 //
 //     id: 1,
 //     data: {
+//         name: "Super Smash Bros. for Wii U",
+//         type: "Fighting"
+//     }
+//
+// });
+
+// socket.emit('create game', {
+//
+//     id: 1,
+//     data: {
 //         name: "Halo: The Master Chief Collection",
-//         type: "First Person"
+//         type: "First Person Shooter"
 //     }
 //
 // });

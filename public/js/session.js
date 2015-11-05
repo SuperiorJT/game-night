@@ -47,7 +47,44 @@ createLobby.click(function() {
             $('.popup-content').click(function(e) {
                 e.stopPropagation();
             });
-            $('.popup-content').load('templates/popup-create-lobby.html');
+            $('.popup-content').load('templates/popup-create-lobby.html', function() {
+
+                var checkInputs = function() {
+                    if ($('.dd-selected-value').val() > 0 && $('#create-lobby-number').val() > 1) {
+                        $('#finalize-lobby').attr({
+                            disabled: false
+                        });
+                    } else {
+                        $('#finalize-lobby').attr({
+                            disabled: true
+                        });
+                    }
+                }
+
+                $('#create-lobby-game').append($('<option value="0">Select Game...</option>'));
+                state.games.forEach(function(val) {
+                    var option = $('<option value="' + val.id + '" data-imagesrc="' + val.img.icon + '" data-description="' + val.type + '">' + val.name + '</option>');
+                    $('#create-lobby-game').append(option);
+                });
+                $('#create-lobby-game').ddslick({
+                    width: '100%',
+                    onSelected: checkInputs
+                });
+                $('#create-lobby-number').change(function() {
+                    checkInputs();
+                });
+                $('#finalize-lobby').click(function() {
+                    socket.emit('round create', {
+                        id: localStorage.userID,
+                        data: {
+                            game: $('#create-lobby-game').data('ddslick').selectedData.value,
+                            admin: localStorage.userID,
+                            size: $('#create-lobby-number').val()
+                        }
+                    });
+                    return false;
+                });
+            });
         }
     }
 });
@@ -136,6 +173,11 @@ socket.on('session joined', function(data) {
     if (state.admin) {
         createLobby.show();
     }
+    console.log(state.user.lobby);
+    if (state.user.lobby) {
+        console.log('fetching round');
+        socket.emit('fetch round', { round: state.user.lobby });
+    }
     sessionStatus.lobbyNotFound();
     transition.sessionJoin();
 });
@@ -147,3 +189,44 @@ socket.on('session left', function() {
     sessionStatus.sessionAvailable();
     transition.sessionLeave();
 });
+
+socket.on('round created', function(data) {
+    data.admin = state.users.filter(function(val) {
+        return val.id == data.admin;
+    })[0];
+    data.game = state.games.filter(function(val) {
+        return val.id == data.game;
+    })[0];
+    state.rounds.push(data);
+    if (data.admin.id == localStorage.userID) {
+        socket.emit('round join', {
+            id: localStorage.userID,
+            round: data.id
+        });
+    }
+});
+
+socket.on('round joined', function(data) {
+    console.log(data);
+    var roundUsers = data.users;
+    data = state.rounds.filter(function(val) {
+        return val.id == data.id;
+    })[0];
+    data.users = roundUsers;
+    state.round = data;
+    displayRound(data);
+});
+
+socket.on('receive round', function(data) {
+    console.log('received round');
+    state.round = data;
+    displayRound(data);
+});
+
+var displayRound = function(data) {
+    $('.lobby-active-leader-value').text(data.admin.username);
+    $('.lobby-active-game-value').text(data.game.name);
+    $('.lobby-active-status-value').text(data.users.length + ' / ' + data.size);
+    $('.lobby-active-panel').fadeIn('fast');
+    $('.lobby-panel, .activity-panel, .popup').fadeOut('fast');
+}

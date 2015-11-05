@@ -1,4 +1,5 @@
 @import "notifications";
+@import "popup-create-lobby";
 
 @font-face {
   font-family: 'VisitorTT1BRK';
@@ -281,6 +282,10 @@ html, body {
 
                 .lobby-active-panel {
                     display: none;
+                    margin-top: 15px;
+                    padding: 15px;
+                    position: relative;
+                    height: 100%;
                 }
 
                 #trigger-session, #join-session, #create-lobby {

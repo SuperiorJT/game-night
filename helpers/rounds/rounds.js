@@ -28,7 +28,7 @@ module.exports.create = function(data, callback) {
                         data.winners = [];
                         cache.rounds.push(data);
                         client.incr('round:gen-id');
-                        callback(null, reply);
+                        callback(null, data);
                     }
                 });
             }
@@ -62,8 +62,8 @@ module.exports.join = function(data, callback) {
                         } else {
                             cache.rounds[index].users.push(data.id);
                             users.updateState(data.id, null, null, round.id);
-                            client.hset('round:' + data.round, 'users', JSON.stringify(users));
-                            callback(true);
+                            client.hset('round:' + data.round, 'users', JSON.stringify(cache.rounds[index].users));
+                            callback(cache.rounds[index]);
                         }
                     });
                 }
@@ -98,7 +98,7 @@ module.exports.leave = function(data, callback) {
                         });
                         client.hset('round:' + data.round, 'users', JSON.stringify(users));
                         users.updateState(data.id, null, null, 0);
-                        callback(true);
+                        callback(round);
                     }
                     return userFound;
                 });

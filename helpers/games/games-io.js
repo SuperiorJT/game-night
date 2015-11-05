@@ -27,29 +27,37 @@ module.exports.init = function(conn) {
 
 
     conn.socket.on('fetch games', function() {
-        var multi = client.multi();
-        client.get('game:gen-id', function(err, reply) {
-            if (err) {
-                notify.fail(conn.socket, "Could not download list of games", null);
-            } else {
-                for (var i = 1; i < reply; i++) {
-                    multi.hgetall('game:' + i);
-                }
-                multi.exec(function(err, replies) {
-                    if (err) {
-                        notify.fail(conn.socket, "Could not download list of games", null);
-                    } else {
-                        var output = [];
-                        for (reply in replies) {
-                            if (reply) {
-                                replies[reply].img = JSON.parse(replies[reply].img);
-                                output.push(replies[reply]);
-                            }
-                        }
-                        conn.socket.emit('receive games', output);
-                    }
-                });
+        loadGames(conn);
+    });
+};
+
+module.exports.emitGames = function(conn) {
+    loadGames(conn);
+};
+
+var loadGames = function(conn) {
+    var multi = client.multi();
+    client.get('game:gen-id', function(err, reply) {
+        if (err) {
+            notify.fail(conn.socket, "Could not download list of games", null);
+        } else {
+            for (var i = 1; i < reply; i++) {
+                multi.hgetall('game:' + i);
             }
-        });
+            multi.exec(function(err, replies) {
+                if (err || !replies.length) {
+                    notify.fail(conn.socket, "Could not download list of games", null);
+                } else {
+                    var output = [];
+                    for (reply in replies) {
+                        if (reply) {
+                            replies[reply].img = JSON.parse(replies[reply].img);
+                            output.push(replies[reply]);
+                        }
+                    }
+                    conn.socket.emit('receive games', output);
+                }
+            });
+        }
     });
 }
