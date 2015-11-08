@@ -35,7 +35,7 @@ module.exports.create = function(data, callback) {
                             data.game = reply;
                             data.users = [];
                             data.winners = [];
-                            data.status = 0 + " / " + data.size;
+                            data.status = 1 + " / " + data.size;
                             cache.rounds.push(data);
                             client.incr('round:gen-id');
                             callback(null, data);
@@ -76,6 +76,7 @@ module.exports.join = function(data, callback) {
                             roundUsers.forEach(function(val, index) {
                                 roundUsers[index] = val;
                             });
+                            cache.rounds[index].status = roundUsers.length + " / " + round.size;
                             users.updateState(data.id, null, null, round.id);
                             client.hset('round:' + data.round, 'users', JSON.stringify(roundUsers));
                             callback(cache.rounds[index]);
@@ -97,6 +98,7 @@ module.exports.join = function(data, callback) {
 
 */
 module.exports.leave = function(data, callback) {
+    console.log(data);
     if (!data.id || !data.round) {
         callback(format.fail("Missing required fields.", null));
     } else {
@@ -106,7 +108,7 @@ module.exports.leave = function(data, callback) {
                 roundFound = true;
                 var userFound = false;
                 cache.rounds[index].users.some(function(user, userIndex) {
-                    if (user == data.id) {
+                    if (user.id == data.id) {
                         userFound = true;
                         cache.rounds[index].users = cache.rounds[index].users.filter(function(val) {
                             return val.id != user.id;
@@ -115,6 +117,7 @@ module.exports.leave = function(data, callback) {
                         roundUsers.forEach(function(val, index) {
                             roundUsers[index] = val;
                         });
+                        cache.rounds[index].status = roundUsers.length + " / " + round.size;
                         client.hset('round:' + data.round, 'users', JSON.stringify(roundUsers));
                         users.updateState(data.id, null, null, 0);
                         callback(round);
@@ -143,6 +146,7 @@ module.exports.start = function(data, callback) {
                 roundFound = true;
                 var time = new Date().getTime();
                 cache.rounds[index].startTime = time;
+                cache.rounds[index].status = "In Progress";
                 callback(true);
             }
             return roundFound;
@@ -163,6 +167,7 @@ module.exports.finish = function(data, callback) {
                 roundFound = true;
                 var time = new Date().getTime();
                 cache.rounds[index].endTime = time;
+                cache.rounds[index].status = "Finishing...";
                 callback(true);
             }
             return roundFound;
@@ -252,8 +257,6 @@ module.exports.close = function(data, callback) {
                 cache.rounds = cache.rounds.filter(function(val) {
                     return val.id != round.id;
                 });
-                console.log('closed round');
-                console.log(cache.rounds);
                 callback(round);
             }
             return roundFound;

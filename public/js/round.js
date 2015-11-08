@@ -11,8 +11,12 @@ socket.on('round created', function(data) {
     }
 });
 
+socket.on('round closed', function(data) {
+    state.rounds = data;
+    updateDisplayedRounds();
+});
+
 socket.on('round joined', function(data) {
-    console.log(data);
     state.round = data;
     displayRound(data);
 });
@@ -24,7 +28,8 @@ socket.on('receive round', function(data) {
 });
 
 socket.on('round users updated', function(data) {
-    parseUsersForCurrentRound();
+    state.round = data;
+    updateCurrentRound();
 });
 
 socket.on('receive rounds', function(data) {
@@ -32,24 +37,18 @@ socket.on('receive rounds', function(data) {
     updateDisplayedRounds();
 });
 
-var parseUsersForCurrentRound = function() {
-    if (state.round) {
-        roundUsers = [];
-        for (var i = 0; i < state.round.users.length; i++) {
-            var user = state.users.filter(function(val) {
-                return val.id == state.round.users[i];
-            })[0];
-            if (user) {
-                roundUsers.push(user);
-            }
-        }
-    }
-};
+var updateCurrentRound = function() {
+    $('.lobby-active-status-value').text(state.round.status);
+    $('.lobby-active-players').html('<div>Players</div>');
+    state.round.users.forEach(function(val) {
+        $('.lobby-active-players').append('<div class="lobby-active-player">' + val.username + '</div>');
+    });
+}
 
 var displayRound = function(data) {
     $('.lobby-active-leader-value').text(data.admin.username);
     $('.lobby-active-game-value').text(data.game.name);
-    $('.lobby-active-status-value').text(data.users.length + ' / ' + data.size);
+    $('.lobby-active-status-value').text(data.status);
     $('.lobby-active-panel').fadeIn('fast');
     $('.lobby-panel, .activity-panel, .popup').fadeOut('fast');
 };

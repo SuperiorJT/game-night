@@ -173,7 +173,6 @@ socket.on('session joined', function(data) {
     if (state.admin) {
         createLobby.show();
     }
-    console.log(state.user.lobby);
     if (state.user.lobby) {
         console.log('fetching round');
         socket.emit('fetch round', { round: state.user.lobby });

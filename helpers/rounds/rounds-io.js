@@ -114,7 +114,7 @@ module.exports.init = function(conn) {
                 conn.socket.emit('round claim failed', null);
             } else {
                 client.hgetall('round:' + data.round, function(err, reply) {
-                    conn.io.to('session room ' + cache.session.id).emit('round closed', reply);
+                    conn.io.to('session room ' + cache.session.id).emit('round closed', cache.rounds);
                     cache.users.forEach(function(val) {
                         conn.io.sockets[val.sid].leave('round room ' + data.round);
                     });
@@ -167,7 +167,7 @@ var roundLeave = function(data, conn) {
                 conn.socket.emit('round left', reply);
                 conn.io.to('round room ' + data.round).emit('round users updated', reply);
                 conn.socket.leave('round room ' + data.round);
-                if (round.admin == data.id) {
+                if (round.admin.id == data.id) {
                     roundClose(data, conn);
                 }
             });
@@ -187,7 +187,7 @@ var roundClose = function(data, conn) {
                         conn.io.sockets[val.sid].leave('round room ' + data.round);
                     }
                 });
-                conn.io.to('session room ' + cache.session.id).emit('round closed', reply);
+                conn.io.to('session room ' + cache.session.id).emit('round closed', cache.rounds);
             });
         }
     });

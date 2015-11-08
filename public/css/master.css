@@ -270,6 +270,9 @@ html, body {
             height: 40px;
             line-height: 40px;
             border-bottom: black 1px solid; }
+          .content .session .row .session-main .lobby-active-panel .lobby-active-players .lobby-active-player {
+            height: 40px;
+            border-bottom: black 1px solid; }
         .content .session .row .session-main .lobby-active-panel .lobby-active-actions {
           float: right;
           display: inline-flex;

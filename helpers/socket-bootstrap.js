@@ -66,13 +66,11 @@ module.exports = function(io) {
             cache.users.some(function(user) {
                 if (user.sid == socket.id) {
                     var sessionId = null;
-                    var round = null;
                     if (user.lobby) {
                         rounds.leave({
                             id: user.id,
                             round: user.lobby
                         }, conn);
-                        round = 0;
                     }
                     if (user.session) {
                         sessions.leave({
@@ -80,7 +78,7 @@ module.exports = function(io) {
                         }, conn);
                         sessionId = 0;
                     }
-                    users.updateState(user.id, false, sessionId, round);
+                    users.updateState(user.id, false, sessionId, null);
                     cache.users = cache.users.filter(function(val) {
                         return val.id != user.id;
                     });
