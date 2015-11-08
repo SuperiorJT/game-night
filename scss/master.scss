@@ -253,8 +253,13 @@ html, body {
                         text-align: initial;
 
                         tbody {
+                            tr {
+                                max-height: 40px;
+                            }
+
                             tr:hover {
                                 background-color: #DCDCDC;
+                                cursor: pointer;
                             }
                         }
                     }
@@ -318,6 +323,14 @@ html, body {
                         padding-left: 10px;
                         width: 130px;
                         height: calc(100% - 60px);
+
+                        #round-start {
+                            display: none;
+                        }
+
+                        &>button:not(:first-child) {
+                            margin-bottom: 10px;
+                        }
                     }
 
                 }

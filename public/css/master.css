@@ -234,8 +234,11 @@ html, body {
           position: relative;
           height: calc(100% - 44px);
           text-align: initial; }
+          .content .session .row .session-main .lobby-panel .lobby-list tbody tr {
+            max-height: 40px; }
           .content .session .row .session-main .lobby-panel .lobby-list tbody tr:hover {
-            background-color: #DCDCDC; }
+            background-color: #DCDCDC;
+            cursor: pointer; }
         .content .session .row .session-main .lobby-panel .session-buttons {
           position: absolute;
           width: 100%;
@@ -281,6 +284,10 @@ html, body {
           padding-left: 10px;
           width: 130px;
           height: calc(100% - 60px); }
+          .content .session .row .session-main .lobby-active-panel .lobby-active-actions #round-start {
+            display: none; }
+          .content .session .row .session-main .lobby-active-panel .lobby-active-actions > button:not(:first-child) {
+            margin-bottom: 10px; }
       .content .session .row .session-main #trigger-session, .content .session .row .session-main #join-session, .content .session .row .session-main #create-lobby {
         display: none; }
 

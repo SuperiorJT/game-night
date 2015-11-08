@@ -252,7 +252,7 @@ module.exports.close = function(data, callback) {
                 roundFound = true;
                 client.del('round:' + round.id);
                 round.users.forEach(function(val) {
-                    users.updateState(val, null, null, 0);
+                    users.updateState(val.id, null, null, 0);
                 });
                 cache.rounds = cache.rounds.filter(function(val) {
                     return val.id != round.id;

@@ -163,12 +163,17 @@ var roundLeave = function(data, conn) {
             conn.socket.emit('round leave failed', null);
         } else {
             var round = reply;
-            client.hgetall('round:' + data.round, function(err, reply) {
-                conn.socket.emit('round left', reply);
-                conn.io.to('round room ' + data.round).emit('round users updated', reply);
-                conn.socket.leave('round room ' + data.round);
-                if (round.admin.id == data.id) {
-                    roundClose(data, conn);
+            cache.rounds.some(function(round, index) {
+                if (round.id == data.round) {
+                    conn.socket.emit('round left', round);
+                    conn.io.to('round room ' + round.id).emit('round users updated', round);
+                    conn.socket.leave('round room ' + round.id);
+                    if (round.admin.id == data.id) {
+                        roundClose(data, conn);
+                    }
+                    return true;
+                } else {
+                    return false;
                 }
             });
         }

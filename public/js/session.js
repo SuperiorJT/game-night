@@ -193,7 +193,14 @@ var updateDisplayedRounds = function() {
     $('.lobby-list tbody').html('');
     state.rounds.forEach(function(val) {
         console.log('added lobby');
-        $('.lobby-list tbody').append('<tr><td>' + val.id + '</td><td>' + val.game.name + '</td><td>' + val.admin.username + '</td><td>' + val.status + '</td><td>' + val.startTime + '</td></tr>')
+        var lobbyItem = $('<tr><td>' + val.id + '</td><td>' + val.game.name + '</td><td>' + val.admin.username + '</td><td>' + val.status + '</td><td>' + val.startTime + '</td></tr>');
+        lobbyItem.click(function() {
+            socket.emit('round join', {
+                id: localStorage.userID,
+                round: val.id
+            });
+        });
+        $('.lobby-list tbody').append(lobbyItem);
     });
     if (state.rounds.length) {
         console.log('display lobby');

@@ -66,6 +66,26 @@ var transition = {
         }
         $('.session').fadeOut();
         transition.loginTo();
+    },
+
+    sessionToLobby: function() {
+        $('.lobby-active-leader-value').text(state.round.admin.username);
+        $('.lobby-active-game-value').text(state.round.game.name);
+        $('.lobby-active-status-value').text(state.round.status);
+        if (state.round.admin.id == localStorage.userID) {
+            $('#round-start').show();
+        }
+        $('.lobby-active-panel').fadeIn('fast');
+        $('.lobby-panel, .activity-panel, .popup').fadeOut('fast');
+    },
+
+    lobbyToSession: function() {
+        $('.lobby-active-panel').fadeOut('fast');
+        $('.lobby-panel, .activity-panel').fadeIn('fast');
+        $('.lobby-active-leader-value').text('');
+        $('.lobby-active-game-value').text('');
+        $('.lobby-active-status-value').text('');
+        $('#round-start').hide();
     }
 };
 
