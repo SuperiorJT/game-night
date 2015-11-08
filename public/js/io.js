@@ -140,10 +140,6 @@ socket.on('receive games', function(data) {
     state.games = data;
 });
 
-socket.on('receive rounds', function(data) {
-    state.rounds = data;
-});
-
 // socket.emit('create game', {
 //
 //     id: 1,

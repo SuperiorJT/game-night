@@ -256,6 +256,28 @@ html, body {
         padding: 15px;
         position: relative;
         height: 100%; }
+        .content .session .row .session-main .lobby-active-panel .lobby-active-players {
+          padding: 0;
+          float: left;
+          display: inline-flex;
+          flex-direction: column;
+          height: calc(100% - 60px);
+          width: calc(100% - 130px);
+          list-style-type: none;
+          border: black 1px solid; }
+          .content .session .row .session-main .lobby-active-panel .lobby-active-players div:first-child {
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+            border-bottom: black 1px solid; }
+        .content .session .row .session-main .lobby-active-panel .lobby-active-actions {
+          float: right;
+          display: inline-flex;
+          flex-direction: column-reverse;
+          position: relative;
+          padding-left: 10px;
+          width: 130px;
+          height: calc(100% - 60px); }
       .content .session .row .session-main #trigger-session, .content .session .row .session-main #join-session, .content .session .row .session-main #create-lobby {
         display: none; }
 

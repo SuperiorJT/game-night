@@ -9,7 +9,7 @@ var clearUserList = function() {
         $('.user-row-' + val.id).remove();
     });
     userList = [];
-}
+};
 
 var addUserToList = function(user) {
     var notFound = userList.every(function(val) {
@@ -24,7 +24,7 @@ var addUserToList = function(user) {
         row.appendTo('.user-list tbody');
         userList.push(user);
     }
-}
+};
 
 var removeUserFromList = function(user) {
     userList.some(function(val) {
@@ -36,13 +36,13 @@ var removeUserFromList = function(user) {
             return true;
         }
         return false;
-    })
-}
+    });
+};
 
 var displayUser = function(user) {
     var row = new userRow(user);
     row.appendTo('.user-list tbody');
-}
+};
 
 socket.on('session user joined', function(data) {
     addUserToList(data);

@@ -37,7 +37,6 @@ module.exports.create = function(user, callback) {
                 "exp": 0,
                 "rank": 0,
                 "skill": JSON.stringify([]),
-                "sessions": JSON.stringify([]),
                 "session": 0,
                 "lobby": 0,
                 "online": false

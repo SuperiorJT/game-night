@@ -17,18 +17,11 @@ module.exports.init = function(conn) {
                 } else if (reply.error) {
                     notify.fail(conn.socket, reply.msg, reply.data);
                 } else {
-                    conn.socket.emit('round created', reply);
-                    var round = reply;
-                    client.hgetall('game:' + data.data.game, function(err, reply) {
-                        if (err || !reply) {
-                            console.log("Error grabbing game for round: " + reply.id);
-                        } else {
-                            console.log("Round created for " + reply.name);
-                            notify.success(conn.io.to('session room ' + cache.session.id), "A new lobby for " + reply.name + " has been created!", {
-                                id: round.id,
-                                img: JSON.parse(reply.img)
-                            });
-                        }
+                    conn.io.to('session room ' + cache.session.id).emit('round created', reply);
+                    console.log("Round created for " + reply.game.name);
+                    notify.success(conn.io.to('session room ' + cache.session.id), "A new lobby for " + reply.game.name + " has been created!", {
+                        id: reply.id,
+                        img: reply.game.img
                     });
                 }
             });
@@ -45,6 +38,7 @@ module.exports.init = function(conn) {
             } else {
                 conn.socket.emit('round joined', reply);
                 conn.socket.join('round room ' + data.round);
+                conn.io.to('round room ' + data.round).emit('round users updated', reply);
                 var username = cache.users.filter(function(val) {
                     return val.id == data.id;
                 })[0].username;
@@ -171,7 +165,7 @@ var roundLeave = function(data, conn) {
             var round = reply;
             client.hgetall('round:' + data.round, function(err, reply) {
                 conn.socket.emit('round left', reply);
-                conn.io.to('round room ' + data.round).emit('round left', reply);
+                conn.io.to('round room ' + data.round).emit('round users updated', reply);
                 conn.socket.leave('round room ' + data.round);
                 if (round.admin == data.id) {
                     roundClose(data, conn);
