@@ -98,7 +98,6 @@ module.exports.join = function(data, callback) {
 
 */
 module.exports.leave = function(data, callback) {
-    console.log(data);
     if (!data.id || !data.round) {
         callback(format.fail("Missing required fields.", null));
     } else {
@@ -144,10 +143,14 @@ module.exports.start = function(data, callback) {
         cache.rounds.some(function(round, index, array) {
             if (round.id == data.round) {
                 roundFound = true;
-                var time = new Date().getTime();
-                cache.rounds[index].startTime = time;
-                cache.rounds[index].status = "In Progress";
-                callback(true);
+                if (round.users.length > 1) {
+                    var time = new Date().getTime();
+                    cache.rounds[index].startTime = time;
+                    cache.rounds[index].status = "In Progress";
+                    callback(cache.rounds[index]);
+                } else {
+                    callback(format.fail("Not enough players to start game!", null));
+                }
             }
             return roundFound;
         });
@@ -179,18 +182,32 @@ module.exports.finish = function(data, callback) {
 };
 
 module.exports.claimVictory = function(data, callback) {
-    if (!data.id || !data.round) {
+    if (!data.id || !data.round || !data.place) {
         callback(format.fail("Missing required fields.", null));
     } else {
         var roundFound = false;
         cache.rounds.some(function(round, index, array) {
             if (round.id == data.round) {
                 roundFound = true;
-                if (cache.rounds[index].users.indexOf(data.id) != -1) {
-                    cache.rounds[index].winners.push(data.id);
-                    callback(true);
+                var currentTime = new Date().getTime();
+                if (currentTime - round.endTime < 30000) {
+                    var userFound = cache.rounds[index].users.some(function(val) {
+                        if (val.id == data.id) {
+                            cache.rounds[index].winners.push({
+                                user: val,
+                                place: data.place
+                            });
+                            callback(true);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    });
+                    if (!userFound) {
+                        callback(format.fail("You are not in this lobby!", null));
+                    }
                 } else {
-                    callback(format.fail("You are not in this lobby!", null));
+                    callback(format.fail("You are too late to claim victory.", null));
                 }
             }
             return roundFound;

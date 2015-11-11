@@ -133,7 +133,6 @@ module.exports = function(io) {
         games.init(conn);
 
         socket.on('fetch all', function() {
-            console.log("fetching for " + socket.id);
             if (cache.session.id) {
                 socket.emit('receive users', cache.users.filter(function(val) {
                     return val.session == cache.session.id;

@@ -129,7 +129,6 @@ module.exports.updateState = function(id, online, sessionId, lobbyId) {
                     if (index != null) {
                         cache.users[index].session = sessionId;
                     }
-                    console.log("sessionID: " + sessionId);
                     client.hset('user:' + id, 'session', sessionId);
                 }
                 return true;

@@ -186,6 +186,9 @@ socket.on('session left', function() {
     createLobby.hide();
     clearUserList();
     sessionStatus.sessionAvailable();
+    $('.lobby-list').fadeOut('fast', function() {
+        $('.lobby-status').show();
+    });
     transition.sessionLeave();
 });
 

@@ -1,4 +1,18 @@
-var roundUsers = [];
+var timerInterval;
+
+$('#leave-lobby').click(function() {
+    socket.emit('round leave', {
+        id: localStorage.userID,
+        round: state.round.id
+    });
+});
+
+$('#round-start').click(function() {
+    socket.emit('round start', {
+        id: localStorage.userID,
+        round: state.round.id
+    });
+});
 
 socket.on('round created', function(data) {
     state.rounds.push(data);
@@ -13,10 +27,24 @@ socket.on('round created', function(data) {
 
 socket.on('round closed', function(data) {
     state.rounds = data;
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
     if (!currentRoundIsAvailable()) {
         transition.lobbyToSession();
         state.round = null;
     }
+    updateDisplayedRounds();
+});
+
+socket.on('round left', function(data) {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+    transition.lobbyToSession();
+    state.round = null;
     updateDisplayedRounds();
 });
 
@@ -28,6 +56,34 @@ function currentRoundIsAvailable() {
             return false;
         }
     });
+}
+
+socket.on('round started', function(data) {
+    if (state.round && state.round.id == data.id) {
+        state.round = data;
+        startRoundTimerInterval();
+    }
+});
+
+function startRoundTimerInterval() {
+    timerInterval = setInterval(function() {
+        calculateAndDisplayRoundTime();
+    }, 1000);
+}
+
+function calculateAndDisplayRoundTime() {
+    function addZ(n) {
+        return (n<10? '0':'') + n;
+     }
+
+    var currentTime = new Date().getTime();
+    var difference = currentTime - state.round.startTime;
+    var ms = difference % 1000;
+    difference = (difference - ms) / 1000;
+    var secs = difference % 60;
+    difference = (difference - secs) / 60;
+    var mins = difference % 60;
+    $('.lobby-active-status-value').text(addZ(mins) + ":" + addZ(secs));
 }
 
 socket.on('round joined', function(data) {

@@ -48,7 +48,7 @@ module.exports.init = function(conn) {
     });
 
     conn.socket.on('round leave', function(data) {
-        roundLeave(data);
+        roundLeave(data, conn);
     });
 
     conn.socket.on('round start', function(data) {
@@ -61,11 +61,9 @@ module.exports.init = function(conn) {
                     notify.fail(conn.socket, reply.msg, reply.data);
                     conn.socket.emit('round start failed', null);
                 } else {
-                    client.hgetall('round:' + data.round, function(err, reply) {
-                        conn.io.to('session room ' + cache.session.id).emit('round started', reply);
-                    });
+                    conn.io.to('session room ' + cache.session.id).emit('round started', reply);
                 }
-            })
+            });
         } else {
             notify.fail(conn.socket, "You are not authorized to start a round", null);
         }
@@ -93,15 +91,18 @@ module.exports.init = function(conn) {
 
     conn.socket.on('round claim', function(data) {
         users.checkStatus(data.id, function(reply) {
-
-        });
-        rounds.claimVictory(data, function(reply) {
             if (reply.error) {
-                notify.fail(conn.socket, reply.msg, reply.data);
-                conn.socket.emit('round claim failed', null);
+                console.log("ERROR");
             } else {
-                client.hgetall('round:' + data.round, function(err, reply) {
-                    conn.io.to('round room ' + data.round).emit('round claimed', reply);
+                rounds.claimVictory(data, function(reply) {
+                    if (reply.error) {
+                        notify.fail(conn.socket, reply.msg, reply.data);
+                        conn.socket.emit('round claim failed', null);
+                    } else {
+                        client.hgetall('round:' + data.round, function(err, reply) {
+                            conn.io.to('round room ' + data.round).emit('round claimed', reply);
+                        });
+                    }
                 });
             }
         });
