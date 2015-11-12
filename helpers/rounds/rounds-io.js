@@ -2,6 +2,7 @@ var rounds = require('./rounds');
 var client = require('../db');
 var notify = require('../socket-notifications');
 var cache = require('../cache');
+var users = require('../users');
 
 module.exports.init = function(conn) {
 
@@ -79,9 +80,7 @@ module.exports.init = function(conn) {
                     notify.fail(conn.socket, reply.msg, reply.data);
                     conn.socket.emit('round finish failed', null);
                 } else {
-                    client.hgetall('round:' + data.round, function(err, reply) {
-                        conn.io.to('round room ' + data.round).emit('round finished', reply);
-                    });
+                    conn.io.to('round room ' + data.round).emit('round finished', reply);
                 }
             })
         } else {
@@ -99,9 +98,10 @@ module.exports.init = function(conn) {
                         notify.fail(conn.socket, reply.msg, reply.data);
                         conn.socket.emit('round claim failed', null);
                     } else {
-                        client.hgetall('round:' + data.round, function(err, reply) {
-                            conn.io.to('round room ' + data.round).emit('round claimed', reply);
-                        });
+                        conn.io.to('round room ' + data.round).emit('round claimed', reply);
+                        if (reply.winners.length == reply.users.length) {
+                            conn.io.to('round room ' + data.round).emit('round claimed complete', reply);
+                        }
                     }
                 });
             }
@@ -114,17 +114,21 @@ module.exports.init = function(conn) {
                 notify.fail(conn.socket, reply.msg, reply.data);
                 conn.socket.emit('round claim failed', null);
             } else {
-                client.hgetall('round:' + data.round, function(err, reply) {
+                cache.users.forEach(function(val) {
+                    conn.io.sockets.connected[val.sid].leave('round room ' + data.round);
+                });
+                rounds.updateStats(reply, function(err, user) {
+                    if (err) {
+                        throw err;
+                    }
+                    conn.io.sockets.connected[user.sid].emit('exp update', user.exp);
+
+                }, function(err, round) {
+                    if (err) {
+                        throw err;
+                    }
+                    console.log('round closed');
                     conn.io.to('session room ' + cache.session.id).emit('round closed', cache.rounds);
-                    cache.users.forEach(function(val) {
-                        conn.io.sockets[val.sid].leave('round room ' + data.round);
-                    });
-                    updateStats(reply, function(err, user) {
-                        if (err) {
-                            throw err;
-                        }
-                        conn.io.sockets.connected[user.sid].emit('exp update', user);
-                    });
                 });
             }
         });
@@ -189,9 +193,7 @@ var roundClose = function(data, conn) {
         } else {
             client.hgetall('round:' + data.round, function(err, reply) {
                 cache.users.forEach(function(val) {
-                    if (conn.io.sockets[val.sid]) {
-                        conn.io.sockets[val.sid].leave('round room ' + data.round);
-                    }
+                    conn.io.sockets.connected[val.sid].leave('round room ' + data.round);
                 });
                 conn.io.to('session room ' + cache.session.id).emit('round closed', cache.rounds);
             });

@@ -171,7 +171,7 @@ module.exports.finish = function(data, callback) {
                 var time = new Date().getTime();
                 cache.rounds[index].endTime = time;
                 cache.rounds[index].status = "Finishing...";
-                callback(true);
+                callback(round);
             }
             return roundFound;
         });
@@ -190,14 +190,36 @@ module.exports.claimVictory = function(data, callback) {
             if (round.id == data.round) {
                 roundFound = true;
                 var currentTime = new Date().getTime();
-                if (currentTime - round.endTime < 30000) {
+                if (currentTime - round.endTime < 35000) {
                     var userFound = cache.rounds[index].users.some(function(val) {
                         if (val.id == data.id) {
                             cache.rounds[index].winners.push({
                                 user: val,
                                 place: data.place
                             });
-                            callback(true);
+                            setTimeout(function() {
+                                cache.rounds.some(function(round, index, array) {
+                                    if (round.id == data.round) {
+                                        if (round.winners.length < round.users.length) {
+                                            round.users.forEach(function(val) {
+                                                var user = round.winners.filter(function(val) {
+                                                    return val.user.id == user.id;
+                                                })[0];
+                                                if (!user) {
+                                                    cache.rounds[index].winners.push({
+                                                        user: val,
+                                                        place: cache.rounds[index].users.length
+                                                    });
+                                                }
+                                            });
+                                        }
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                });
+                            }, 30000);
+                            callback(cache.rounds[index]);
                             return true;
                         } else {
                             return false;
@@ -231,18 +253,12 @@ module.exports.declareWinners = function(data, callback) {
         cache.rounds.some(function(round, index, array) {
             if (round.id == data.round) {
                 roundFound = true;
-                cache.rounds[index].winners = JSON.stringify(data.winners);
-                cache.rounds[index].users = JSON.stringify(cache.rounds[index].users);
-                client.hset('round:' + data.round, 'users', JSON.stringify(cache.rounds[index].users));
-                client.hset('round:' + data.round, 'winners', JSON.stringify(cache.rounds[index].winners));
-                if (cache.session.rounds.indexOf(data.round) == -1) {
-                    cache.session.rounds.push(data.round);
+                cache.rounds[index].winners = data.winners;
+                if (cache.session.rounds.indexOf(data.round.id) == -1) {
+                    cache.session.rounds.push(data.round.id);
                 }
                 round.users.forEach(function(val) {
                     users.updateState(val, null, null, 0);
-                });
-                cache.rounds = cache.rounds.filter(function(val) {
-                    return val.id != round.id;
                 });
                 callback(round);
             }
@@ -284,39 +300,78 @@ module.exports.close = function(data, callback) {
     }
 };
 
-module.exports.updateStats = function(round, callback) {
+module.exports.updateStats = function(round, userCallback, callback) {
     var length = round.endTime - round.startTime;
     var expTimeMultiplier = length / 100000;
-    var expWinMultiplier = 1.25;
+    var expWinMultiplier = 1;
+    var expWinMod = .25;
     var baseExpReward = 25;
     var bonusExpMultiplier = 1;
-    client.hgetall('exp', function(err, reply) {
+    client.hgetall('exp', function(err, expConsts) {
         if (err) {
             callback(err, false);
         }
-        baseExpReward = reply.base;
-        bonusExpMultiplier = reply.bonus;
+        if (expConsts) {
+            baseExpReward = expConsts.base;
+            bonusExpMultiplier = expConsts.bonus;
+        }
 
-        round.users.forEach(function(id) {
-            client.hget('user:' + id, 'exp', function(err, reply) {
-                if (err) {
-                    callback(err, false);
-                } else {
-                    reply += baseExpReward * bonusExpMultiplier * expTimeMultiplier;
-                    if (round.winners.indexOf(id) != -1) {
-                        reply = reply * expWinMultiplier;
-                    }
-                    cache.users.some(function(val, index) {
-                        if (val.id == id) {
-                            cache.users[index].exp = reply;
-                            callback(null, val);
-                            return true;
-                        }
-                        return false;
-                    });
-                    client.hset('user:' + id, 'exp', reply);
+        round.users.forEach(function(user) {
+            var exp = baseExpReward * bonusExpMultiplier * expTimeMultiplier;
+            var winner = round.winners.filter(function(val) {
+                return val.user.id == user.id;
+            })[0];
+            if (winner.place != round.users.length) {
+                expWinMultiplier += (expWinMod / winner.place);
+            }
+            user.exp = exp * expWinMultiplier;
+            cache.users.some(function(val, index) {
+                if (val.id == user.id) {
+                    cache.users[index].exp = Math.floor(user.exp);
+                    userCallback(null, cache.users[index]);
+                    return true;
                 }
+                return false;
             });
+            client.hset('user:' + user.id, 'exp', Math.floor(user.exp));
+        });
+        cache.rounds.some(function(val, index) {
+            if (val.id == round.id) {
+                resetRoundToIds(index);
+                round.status = "Complete";
+                client.hmset('round:' + val.id, cache.rounds[index], function() {
+                    cache.rounds = cache.rounds.filter(function(val) {
+                        return val.id != round.id;
+                    });
+                    callback(null, round);
+                });
+                return true;
+            } else {
+                return false;
+            }
         });
     });
 }
+
+function resetRoundToIds(index) {
+    var users = [];
+    var winners = [];
+    var admin = cache.rounds[index].admin.id;
+    var game = cache.rounds[index].game.id;
+
+    cache.rounds[index].users.forEach(function(val) {
+        users.push(val.id);
+    });
+
+    cache.rounds[index].winners.forEach(function(val) {
+        winners.push({
+            user: val.user.id,
+            place: val.place
+        });
+    });
+
+    cache.rounds[index].users = users;
+    cache.rounds[index].winners = winners;
+    cache.rounds[index].admin = admin;
+    cache.rounds[index].game = game;
+};
