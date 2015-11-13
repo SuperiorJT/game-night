@@ -123,7 +123,8 @@ socket.on('round claimed complete', function(data) {
             });
         });
     } else {
-        $('.claim-victory-timer').hide();
+        $('#victory-place, #victory-claim, .claim-victory-timer').hide();
+        $('.claim-victory-loading').show();
         $('.claim-victory-loading span:nth-child(2)').text('Waiting for leader to confirm');
     }
 });
@@ -244,7 +245,8 @@ socket.on('receive rounds', function(data) {
 });
 
 socket.on('exp update', function(exp) {
-    var difference = exp - state.user.exp;
+    var difference = Math.abs(exp - state.user.exp);
+    expAnimate(exp);
     state.user.exp = exp;
     console.log(difference + " " + state.user.exp);
 });

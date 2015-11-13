@@ -4,6 +4,13 @@
 }
 .create-lobby-form {
     padding: 10%;
+
+    @media (max-width: 768px) {
+        padding: 5%;
+        label {
+            display: inline;
+        }
+    }
 }
 
 .dd-option-image, .dd-selected-image {

@@ -137,6 +137,7 @@ socket.on('notification', function(data) {
 socket.on('logged in', function(data) {
     state.online = true;
     state.user = data.user;
+    expAnimate(state.user.exp);
     state.admin = data.user.admin;
     state.sessionAvailable = data.session;
     if (state.sessionAvailable) {

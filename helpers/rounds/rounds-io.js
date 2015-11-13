@@ -81,6 +81,29 @@ module.exports.init = function(conn) {
                     conn.socket.emit('round finish failed', null);
                 } else {
                     conn.io.to('round room ' + data.round).emit('round finished', reply);
+                    setTimeout(function() {
+                        cache.rounds.some(function(round, index, array) {
+                            if (round.id == data.round) {
+                                if (round.winners.length < round.users.length) {
+                                    round.users.forEach(function(val) {
+                                        var user = round.winners.filter(function(winnerVal) {
+                                            return winnerVal.user.id == val.id;
+                                        })[0];
+                                        if (!user) {
+                                            cache.rounds[index].winners.push({
+                                                user: val,
+                                                place: cache.rounds[index].users.length
+                                            });
+                                        }
+                                    });
+                                }
+                                conn.io.to('round room ' + data.round).emit('round claimed complete', reply);
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
+                    }, 30000);
                 }
             })
         } else {
@@ -128,6 +151,9 @@ module.exports.init = function(conn) {
                         throw err;
                     }
                     console.log('round closed');
+                    round.users.forEach(function(val) {
+                        users.updateState(val, null, null, 0);
+                    });
                     conn.io.to('session room ' + cache.session.id).emit('round closed', cache.rounds);
                 });
             }

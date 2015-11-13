@@ -42,6 +42,11 @@
 
 .create-lobby-form {
   padding: 10%; }
+  @media (max-width: 768px) {
+    .create-lobby-form {
+      padding: 5%; }
+      .create-lobby-form label {
+        display: inline; } }
 
 .dd-option-image, .dd-selected-image {
   vertical-align: middle;
@@ -259,6 +264,9 @@ html, body {
         padding: 15px;
         position: relative;
         height: 100%; }
+        @media (max-width: 768px) {
+          .content .session .row .session-main .lobby-active-panel {
+            height: 84%; } }
         .content .session .row .session-main .lobby-active-panel .lobby-active-players {
           padding: 0;
           float: left;
@@ -268,6 +276,12 @@ html, body {
           width: calc(100% - 130px);
           list-style-type: none;
           border: black 1px solid; }
+          @media (max-width: 768px) {
+            .content .session .row .session-main .lobby-active-panel .lobby-active-players {
+              display: flex;
+              float: none;
+              height: 60%;
+              width: 100%; } }
           .content .session .row .session-main .lobby-active-panel .lobby-active-players div:first-child {
             text-align: center;
             height: 40px;
@@ -284,6 +298,19 @@ html, body {
           padding-left: 10px;
           width: 130px;
           height: calc(100% - 60px); }
+          @media (max-width: 768px) {
+            .content .session .row .session-main .lobby-active-panel .lobby-active-actions {
+              display: flex;
+              float: none;
+              width: 100%;
+              height: 25%;
+              padding: 10px 0 0 0;
+              flex-direction: row;
+              justify-content: space-between; }
+              .content .session .row .session-main .lobby-active-panel .lobby-active-actions > button:not(:first-child) {
+                margin-bottom: 0px; }
+              .content .session .row .session-main .lobby-active-panel .lobby-active-actions > button {
+                height: 45%; } }
           .content .session .row .session-main .lobby-active-panel .lobby-active-actions #round-start {
             display: none; }
           .content .session .row .session-main .lobby-active-panel .lobby-active-actions > button:not(:first-child) {
@@ -394,6 +421,9 @@ html, body {
     height: 70%;
     width: 50%;
     background-color: whitesmoke; }
+    @media (max-width: 768px) {
+      .popup .popup-content {
+        width: 100%; } }
 
 .vertical-align {
   display: flex;
