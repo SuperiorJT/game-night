@@ -123,23 +123,15 @@
                                 <div class="lobby-active-game">Game: <span class="lobby-active-game-value"></span></div>
                                 <div class="lobby-active-status">Status: <span class="lobby-active-status-value"></span></div>
                             </div>
-                            <table class="table table-bordered table-hover lobby-active-players">
-                                <thead>
-                                    <tr>
-                                        <th class="lobby-active-players-name">
-                                            Name
-                                        </th>
-                                        <th class="lobby-active-players-rank">
-                                            Level
-                                        </th>
-                                        <th class="lobby-active-players-skill">
-                                            Skill
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                            <div class="lobby-active-players">
+                                <div>
+                                    Players
+                                </div>
+                            </div>
+                            <div class="lobby-active-actions">
+                                <button type="button" name="leaveLobby" class="btn btn-default" id="leave-lobby">Leave Lobby</button>
+                                <button type="button" name="roundStart" class="btn btn-default" id="round-start">Start Round</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -195,5 +187,6 @@
         <script src="js/login.js"></script>
         <script src="js/profile-panel.js"></script>
         <script src="js/session.js"></script>
+        <script src="js/round.js"></script>
     </body>
 </html>

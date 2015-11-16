@@ -43,7 +43,7 @@ module.exports.init = function(conn) {
     });
 
     conn.socket.on('session leave', function(data) {
-
+        sessionLeave(data, conn);
     });
 
     conn.socket.on('session end', function(data) {

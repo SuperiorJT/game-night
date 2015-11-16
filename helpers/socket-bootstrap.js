@@ -27,7 +27,6 @@ module.exports = function(io) {
                 if (reply) {
                     reply.id = JSON.parse(reply.id);
                     reply.skill = JSON.parse(reply.skill);
-                    reply.sessions = JSON.parse(reply.sessions);
                     reply.exp = JSON.parse(reply.exp);
                     reply.rank = JSON.parse(reply.rank);
                     reply.session = JSON.parse(reply.session);
@@ -66,13 +65,11 @@ module.exports = function(io) {
             cache.users.some(function(user) {
                 if (user.sid == socket.id) {
                     var sessionId = null;
-                    var round = null;
                     if (user.lobby) {
                         rounds.leave({
                             id: user.id,
                             round: user.lobby
                         }, conn);
-                        round = 0;
                     }
                     if (user.session) {
                         sessions.leave({
@@ -80,7 +77,7 @@ module.exports = function(io) {
                         }, conn);
                         sessionId = 0;
                     }
-                    users.updateState(user.id, false, sessionId, round);
+                    users.updateState(user.id, false, sessionId, null);
                     cache.users = cache.users.filter(function(val) {
                         return val.id != user.id;
                     });
@@ -135,7 +132,6 @@ module.exports = function(io) {
         games.init(conn);
 
         socket.on('fetch all', function() {
-            console.log("fetching for " + socket.id);
             if (cache.session.id) {
                 socket.emit('receive users', cache.users.filter(function(val) {
                     return val.session == cache.session.id;

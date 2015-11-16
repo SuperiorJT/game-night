@@ -173,7 +173,6 @@ socket.on('session joined', function(data) {
     if (state.admin) {
         createLobby.show();
     }
-    console.log(state.user.lobby);
     if (state.user.lobby) {
         console.log('fetching round');
         socket.emit('fetch round', { round: state.user.lobby });
@@ -187,46 +186,32 @@ socket.on('session left', function() {
     createLobby.hide();
     clearUserList();
     sessionStatus.sessionAvailable();
+    $('.lobby-list').fadeOut('fast', function() {
+        $('.lobby-status').show();
+    });
     transition.sessionLeave();
 });
 
-socket.on('round created', function(data) {
-    data.admin = state.users.filter(function(val) {
-        return val.id == data.admin;
-    })[0];
-    data.game = state.games.filter(function(val) {
-        return val.id == data.game;
-    })[0];
-    state.rounds.push(data);
-    if (data.admin.id == localStorage.userID) {
-        socket.emit('round join', {
-            id: localStorage.userID,
-            round: data.id
+var updateDisplayedRounds = function() {
+    $('.lobby-list tbody').html('');
+    state.rounds.forEach(function(val) {
+        console.log('added lobby');
+        var lobbyItem = $('<tr><td>' + val.id + '</td><td>' + val.game.name + '</td><td>' + val.admin.username + '</td><td>' + val.status + '</td><td>' + val.startTime + '</td></tr>');
+        lobbyItem.click(function() {
+            socket.emit('round join', {
+                id: localStorage.userID,
+                round: val.id
+            });
+        });
+        $('.lobby-list tbody').append(lobbyItem);
+    });
+    if (state.rounds.length) {
+        console.log('display lobby');
+        $('.lobby-status').hide();
+        $('.lobby-list').fadeIn('fast');
+    } else {
+        $('.lobby-list').fadeOut('fast', function() {
+            $('.lobby-status').show();
         });
     }
-});
-
-socket.on('round joined', function(data) {
-    console.log(data);
-    var roundUsers = data.users;
-    data = state.rounds.filter(function(val) {
-        return val.id == data.id;
-    })[0];
-    data.users = roundUsers;
-    state.round = data;
-    displayRound(data);
-});
-
-socket.on('receive round', function(data) {
-    console.log('received round');
-    state.round = data;
-    displayRound(data);
-});
-
-var displayRound = function(data) {
-    $('.lobby-active-leader-value').text(data.admin.username);
-    $('.lobby-active-game-value').text(data.game.name);
-    $('.lobby-active-status-value').text(data.users.length + ' / ' + data.size);
-    $('.lobby-active-panel').fadeIn('fast');
-    $('.lobby-panel, .activity-panel, .popup').fadeOut('fast');
-}
+};
