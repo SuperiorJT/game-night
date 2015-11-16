@@ -305,6 +305,10 @@ module.exports.updateStats = function(round, userCallback, callback) {
             return false;
         });
         client.hset('user:' + user.id, 'exp', Math.floor(user.exp));
+        if (Math.floor(user.exp) >= ((user.rank + 1) * 1000)) {
+            cache.users[index].rank++;
+            client.hset('user:' + user.id, 'rank', user.rank);
+        }
     });
     cache.rounds.some(function(val, index) {
         if (val.id == round.id) {
