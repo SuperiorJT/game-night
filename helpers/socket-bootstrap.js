@@ -27,7 +27,6 @@ module.exports = function(io) {
                 if (reply) {
                     reply.id = JSON.parse(reply.id);
                     reply.skill = JSON.parse(reply.skill);
-                    reply.sessions = JSON.parse(reply.sessions);
                     reply.exp = JSON.parse(reply.exp);
                     reply.rank = JSON.parse(reply.rank);
                     reply.session = JSON.parse(reply.session);
