@@ -132,7 +132,7 @@ socket.on('round claimed complete', function(data) {
 function loadDeclarationPlayerList() {
     $('.declare-winners-list').html('');
     state.round.winners.forEach(function(val) {
-        var options = $('<select></select>');
+        var options = $('<select class="form-control"></select>');
         for (var i = 1; i <= state.round.users.length; i++) {
             var optionSelected = (i == val.place) ? "selected" : "";
             options.append('<option value="' + i + '" ' + optionSelected + '>' + i + '</option>');
