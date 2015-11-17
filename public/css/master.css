@@ -36,6 +36,90 @@
           cursor: pointer;
           opacity: .5; }
 
+.create-lobby-title {
+  text-align: center;
+  font-size: 150%; }
+
+.create-lobby-form {
+  padding: 10%; }
+  @media (max-width: 768px) {
+    .create-lobby-form {
+      padding: 5%; }
+      .create-lobby-form label {
+        display: inline; } }
+
+.dd-option-image, .dd-selected-image {
+  vertical-align: middle;
+  float: left;
+  margin-right: 10px;
+  max-height: 41px; }
+
+.dd-select {
+  border-radius: 0px; }
+
+.dd-selected {
+  background-color: white; }
+
+.dd-option-text {
+  line-height: normal !important; }
+
+.claim-victory-title {
+  text-align: center; }
+
+.claim-victory-timer {
+  text-align: center;
+  font-size: 4vh; }
+
+.claim-victory-counter {
+  text-align: center;
+  font-size: 5vh; }
+
+.claim-victory-place {
+  margin-top: 5vh; }
+
+#victory-claim, .claim-victory-loading {
+  position: absolute;
+  bottom: 15px;
+  display: block;
+  height: 10vh;
+  width: calc(100% - 30px);
+  text-align: center; }
+
+.declare-winners-title {
+  text-align: center; }
+
+.declare-winners-list {
+  margin-top: 5vh;
+  max-height: 70%;
+  height: 70%;
+  overflow: scroll;
+  padding: 2px; }
+  .declare-winners-list li {
+    list-style-type: none;
+    margin-bottom: 10px; }
+    .declare-winners-list li span {
+      width: 80%;
+      display: inline-block; }
+    .declare-winners-list li select {
+      width: 20%;
+      display: inline-block; }
+
+.claim-victory-counter {
+  text-align: center;
+  font-size: 5vh; }
+
+.claim-victory-place {
+  margin-top: 5vh; }
+
+#victory-claim, .claim-victory-loading {
+  position: absolute;
+  bottom: 15px;
+  margin-left: 2px;
+  display: block;
+  height: 10vh;
+  width: calc(100% - 30px);
+  text-align: center; }
+
 @font-face {
   font-family: 'VisitorTT1BRK';
   src: url("../fonts/VisitorTT1BRK.woff") format("woff"), url("../fonts/VisitorTT1BRK.ttf") format("truetype"), url("../fonts/VisitorTT1BRK.svg#VisitorTT1BRK") format("svg");
@@ -213,8 +297,11 @@ body {
           position: relative;
           height: calc(100% - 44px);
           text-align: initial; }
+          .content .session .row .session-main .lobby-panel .lobby-list tbody tr {
+            max-height: 40px; }
           .content .session .row .session-main .lobby-panel .lobby-list tbody tr:hover {
-            background-color: #DCDCDC; }
+            background-color: #DCDCDC;
+            cursor: pointer; }
         .content .session .row .session-main .lobby-panel .session-buttons {
           position: absolute;
           width: 100%;
@@ -277,10 +364,70 @@ body {
             .content .session .row .session-main .activity-panel .activity-panel-notification .notification-next img {
               opacity: 1.0; }
       .content .session .row .session-main .lobby-active-panel {
+<<<<<<< HEAD
         display: none; }
       .content .session .row .session-main #trigger-session,
       .content .session .row .session-main #join-session,
       .content .session .row .session-main #create-lobby {
+=======
+        display: none;
+        margin-top: 15px;
+        padding: 15px;
+        position: relative;
+        height: 100%; }
+        @media (max-width: 768px) {
+          .content .session .row .session-main .lobby-active-panel {
+            height: 84%; } }
+        .content .session .row .session-main .lobby-active-panel .lobby-active-players {
+          padding: 0;
+          float: left;
+          display: inline-flex;
+          flex-direction: column;
+          height: calc(100% - 60px);
+          width: calc(100% - 130px);
+          list-style-type: none;
+          border: black 1px solid; }
+          @media (max-width: 768px) {
+            .content .session .row .session-main .lobby-active-panel .lobby-active-players {
+              display: flex;
+              float: none;
+              height: 60%;
+              width: 100%; } }
+          .content .session .row .session-main .lobby-active-panel .lobby-active-players div:first-child {
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+            border-bottom: black 1px solid; }
+          .content .session .row .session-main .lobby-active-panel .lobby-active-players .lobby-active-player {
+            height: 40px;
+            border-bottom: black 1px solid; }
+        .content .session .row .session-main .lobby-active-panel .lobby-active-actions {
+          float: right;
+          display: inline-flex;
+          flex-direction: column-reverse;
+          position: relative;
+          padding-left: 10px;
+          width: 130px;
+          height: calc(100% - 60px); }
+          @media (max-width: 768px) {
+            .content .session .row .session-main .lobby-active-panel .lobby-active-actions {
+              display: flex;
+              float: none;
+              width: 100%;
+              height: 25%;
+              padding: 10px 0 0 0;
+              flex-direction: row;
+              justify-content: space-between; }
+              .content .session .row .session-main .lobby-active-panel .lobby-active-actions > button:not(:first-child) {
+                margin-bottom: 0px; }
+              .content .session .row .session-main .lobby-active-panel .lobby-active-actions > button {
+                height: 45%; } }
+          .content .session .row .session-main .lobby-active-panel .lobby-active-actions #round-start {
+            display: none; }
+          .content .session .row .session-main .lobby-active-panel .lobby-active-actions > button:not(:first-child) {
+            margin-bottom: 10px; }
+      .content .session .row .session-main #trigger-session, .content .session .row .session-main #join-session, .content .session .row .session-main #create-lobby {
+>>>>>>> master
         display: none; }
 
 .profile-mobile-row {
@@ -386,6 +533,9 @@ body {
     height: 70%;
     width: 50%;
     background-color: whitesmoke; }
+    @media (max-width: 768px) {
+      .popup .popup-content {
+        width: 100%; } }
 
 .vertical-align {
   display: flex;

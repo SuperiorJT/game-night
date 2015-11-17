@@ -31,3 +31,12 @@ module.exports.create = function(data, callback) {
         });
     }
 };
+
+module.exports.getGameById = function(id, callback) {
+    client.hgetall('game:' + id, function(err, reply) {
+        if (reply) {
+            reply.img = JSON.parse(reply.img);
+            callback(reply);
+        }
+    });
+}

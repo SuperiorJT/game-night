@@ -37,10 +37,10 @@ module.exports.create = function(user, callback) {
                 "exp": 0,
                 "rank": 0,
                 "skill": JSON.stringify([]),
-                "sessions": JSON.stringify([]),
                 "session": 0,
                 "lobby": 0,
-                "online": false
+                "online": false,
+                "avatar": 0
             });
             client.sadd(['users', JSON.stringify({
                 "id": reply,
@@ -130,7 +130,6 @@ module.exports.updateState = function(id, online, sessionId, lobbyId) {
                     if (index != null) {
                         cache.users[index].session = sessionId;
                     }
-                    console.log("sessionID: " + sessionId);
                     client.hset('user:' + id, 'session', sessionId);
                 }
                 return true;

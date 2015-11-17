@@ -1,0 +1,45 @@
+.declare-winners-title {
+    text-align: center;
+}
+
+.declare-winners-list {
+    margin-top: 5vh;
+    max-height: 70%;
+    height: 70%;
+    overflow: scroll;
+    padding: 2px;
+
+    li {
+        list-style-type: none;
+        margin-bottom: 10px;
+
+        span {
+            width: 80%;
+            display: inline-block;
+        }
+
+        select {
+            width: 20%;
+            display: inline-block;
+        }
+    }
+}
+
+.claim-victory-counter {
+    text-align: center;
+    font-size: 5vh;
+}
+
+.claim-victory-place {
+    margin-top: 5vh;
+}
+
+#victory-claim, .claim-victory-loading {
+    position: absolute;
+    bottom: 15px;
+    margin-left: 2px;
+    display: block;
+    height: 10vh;
+    width: calc(100% - 30px);
+    text-align: center;
+}

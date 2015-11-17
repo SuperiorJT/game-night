@@ -1,4 +1,11 @@
 @import "notifications";
+<<<<<<< HEAD
+=======
+@import "popup-create-lobby";
+@import "popup-claim-victory";
+@import "popup-declare-winners";
+
+>>>>>>> master
 @font-face {
     font-family: 'VisitorTT1BRK';
     src: url('../fonts/VisitorTT1BRK.woff') format('woff'), url('../fonts/VisitorTT1BRK.ttf') format('truetype'), url('../fonts/VisitorTT1BRK.svg#VisitorTT1BRK') format('svg');
@@ -214,8 +221,13 @@ body {
                         height: calc(100% - 44px);
                         text-align: initial;
                         tbody {
+                            tr {
+                                max-height: 40px;
+                            }
+
                             tr:hover {
                                 background-color: #DCDCDC;
+                                cursor: pointer;
                             }
                         }
                     }
@@ -296,6 +308,81 @@ body {
                 }
                 .lobby-active-panel {
                     display: none;
+                    margin-top: 15px;
+                    padding: 15px;
+                    position: relative;
+                    height: 100%;
+
+                    @media (max-width: 768px) {
+                        height: 84%;
+                    }
+
+                    .lobby-active-players {
+                        padding: 0;
+                        float: left;
+                        display: inline-flex;
+                        flex-direction: column;
+                        height: calc(100% - 60px);
+                        width: calc(100% - 130px);
+                        list-style-type: none;
+                        border: black 1px solid;
+
+                        @media (max-width: 768px) {
+                            display: flex;
+                            float: none;
+                            height: 60%;
+                            width: 100%;
+                        }
+
+                        div:first-child {
+                            text-align: center;
+                            height: 40px;
+                            line-height: 40px;
+                            border-bottom: black 1px solid;
+                        }
+
+                        .lobby-active-player {
+                            height: 40px;
+                            border-bottom: black 1px solid;
+                        }
+                    }
+
+                    .lobby-active-actions {
+                        float: right;
+                        display: inline-flex;
+                        flex-direction: column-reverse;
+                        position: relative;
+                        padding-left: 10px;
+                        width: 130px;
+                        height: calc(100% - 60px);
+
+                        @media (max-width: 768px) {
+                            display: flex;
+                            float: none;
+                            width: 100%;
+                            height: 25%;
+                            padding: 10px 0 0 0;
+                            flex-direction: row;
+                            justify-content: space-between;
+
+                            &>button:not(:first-child) {
+                                margin-bottom: 0px;
+                            }
+
+                            &>button {
+                                height: 45%;
+                            }
+                        }
+
+                        #round-start {
+                            display: none;
+                        }
+
+                        &>button:not(:first-child) {
+                            margin-bottom: 10px;
+                        }
+                    }
+
                 }
                 #trigger-session,
                 #join-session,
@@ -427,6 +514,10 @@ body {
         height: 70%;
         width: 50%;
         background-color: rgba(245, 245, 245, 1);
+
+        @media (max-width: 768px) {
+            width: 100%;
+        }
     }
 }
 

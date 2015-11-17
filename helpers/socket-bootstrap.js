@@ -27,7 +27,6 @@ module.exports = function(io) {
                 if (reply) {
                     reply.id = JSON.parse(reply.id);
                     reply.skill = JSON.parse(reply.skill);
-                    reply.sessions = JSON.parse(reply.sessions);
                     reply.exp = JSON.parse(reply.exp);
                     reply.rank = JSON.parse(reply.rank);
                     reply.session = JSON.parse(reply.session);
@@ -36,6 +35,18 @@ module.exports = function(io) {
                     }
                     reply.admin = JSON.parse(reply.admin);
                     reply.lobby = JSON.parse(reply.lobby);
+                    var roundAvailable = cache.rounds.filter(function(val) {
+                        return val.id == reply.lobby;
+                    })[0];
+                    if (!roundAvailable) {
+                        reply.lobby = 0;
+                    }
+                    if (!reply.avatar) {
+                        reply.avatar = 0;
+                        client.hset("user:" + id, "avatar", 0);
+                    } else {
+                        reply.avatar = JSON.parse(reply.avatar);
+                    }
                     reply.online = true;
                     reply.sid = socket.id;
                     delete reply.password;
@@ -59,7 +70,20 @@ module.exports = function(io) {
             console.log(socket.request.connection.remoteAddress + " has disconnected to the server. id: " + socket.id);
             cache.users.some(function(user) {
                 if (user.sid == socket.id) {
-                    users.updateState(user.id, false, null, null);
+                    var sessionId = null;
+                    if (user.lobby) {
+                        rounds.leave({
+                            id: user.id,
+                            round: user.lobby
+                        }, conn);
+                    }
+                    if (user.session) {
+                        sessions.leave({
+                            id: user.id
+                        }, conn);
+                        sessionId = 0;
+                    }
+                    users.updateState(user.id, false, sessionId, null);
                     cache.users = cache.users.filter(function(val) {
                         return val.id != user.id;
                     });
@@ -75,7 +99,22 @@ module.exports = function(io) {
         });
 
         socket.on('logout', function(user) {
-            users.updateState(user.id, false, null, null);
+            var sessionId = null;
+            var round = null;
+            if (user.lobby) {
+                rounds.leave({
+                    id: user.id,
+                    round: user.lobby
+                }, conn);
+                round = 0;
+            }
+            if (user.session) {
+                sessions.leave({
+                    id: user.id
+                }, conn);
+                sessionId = 0;
+            }
+            users.updateState(user.id, false, sessionId, round);
             cache.users = cache.users.filter(function(val) {
                 return val.id != user.id;
             });
@@ -99,13 +138,13 @@ module.exports = function(io) {
         games.init(conn);
 
         socket.on('fetch all', function() {
-            console.log("fetching for " + socket.id);
             if (cache.session.id) {
                 socket.emit('receive users', cache.users.filter(function(val) {
                     return val.session == cache.session.id;
                 }));
             }
             socket.emit('receive rounds', cache.rounds);
+            games.emitGames(conn);
         });
 
     });
