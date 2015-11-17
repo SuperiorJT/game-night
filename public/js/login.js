@@ -36,7 +36,6 @@ $('#login').click(function() {
 
     })
     .done(function(data) {
-        console.log(data.data);
         localStorage.userID = data.data;
         socket.emit('login', localStorage.userID);
     });
