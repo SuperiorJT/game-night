@@ -41,6 +41,12 @@ module.exports = function(io) {
                     if (!roundAvailable) {
                         reply.lobby = 0;
                     }
+                    if (!reply.avatar) {
+                        reply.avatar = 0;
+                        client.hset("user:" + id, "avatar", 0);
+                    } else {
+                        reply.avatar = JSON.parse(reply.avatar);
+                    }
                     reply.online = true;
                     reply.sid = socket.id;
                     delete reply.password;

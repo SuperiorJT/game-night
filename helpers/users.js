@@ -39,7 +39,8 @@ module.exports.create = function(user, callback) {
                 "skill": JSON.stringify([]),
                 "session": 0,
                 "lobby": 0,
-                "online": false
+                "online": false,
+                "avatar": 0
             });
             client.sadd(['users', JSON.stringify({
                 "id": reply,
