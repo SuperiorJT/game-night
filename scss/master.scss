@@ -285,6 +285,63 @@ html, body {
                     @media (max-width: 991px) {
                         height: calc(24% - 10px);
                     }
+                    .activity-panel-header {
+                        text-align: center;
+                        font-size: 26px;
+                    }
+                    .activity-panel-notification {
+                        display: block;
+                        position: relative;
+                        width: 100%;
+                        background-color: #F4CDA1;
+                        opacity: 0.5;
+                        .notification-content {
+                            display: inline-block;
+                            width: calc(100% - 40px);
+                            height: auto;
+                            margin-left: 0;
+                            .notification-game {
+                                font-size: 22px;
+                                margin-top: 0;
+                                margin-bottom: 0;
+                                padding-bottom: 0;
+                                padding-top: 0;
+                                margin-left: 10px;
+                                opacity: 1;
+                            }
+                            .notification-title {
+                                font-size: 18px;
+                                margin-top: 0;
+                                margin-bottom: 0;
+                                padding-bottom: 0;
+                                padding-top: 0;
+                                margin-left: 10px;
+                                opacity: 1;
+                            }
+                            .notification-info {
+                                font-size: 12px;
+                                margin-top: 0;
+                                margin-bottom: 0;
+                                padding-bottom: 0;
+                                padding-top: 0;
+                                margin-left: 10px;
+                                opacity: 1;
+                            }
+                        }
+                        .notification-next {
+                            margin-right: 0;
+                            display: inline-block;
+                            margin-left: auto;
+                            margin-right: auto;
+                            opacity: 0.6;
+                            background-color: lightgray;
+                            
+                            img {
+                                opacity: 1.0;
+                            }
+                        }
+                        
+                    }
                 }
 
                 .lobby-active-panel {
