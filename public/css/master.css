@@ -133,8 +133,7 @@
   font-weight: normal;
   font-style: normal; }
 
-html,
-body {
+html, body {
   font-family: 'visitor1', 'VisitorTT1BRK', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   height: 100%;
   position: relative; }
@@ -364,12 +363,6 @@ body {
             .content .session .row .session-main .activity-panel .activity-panel-notification .notification-next img {
               opacity: 1.0; }
       .content .session .row .session-main .lobby-active-panel {
-<<<<<<< HEAD
-        display: none; }
-      .content .session .row .session-main #trigger-session,
-      .content .session .row .session-main #join-session,
-      .content .session .row .session-main #create-lobby {
-=======
         display: none;
         margin-top: 15px;
         padding: 15px;
@@ -427,7 +420,6 @@ body {
           .content .session .row .session-main .lobby-active-panel .lobby-active-actions > button:not(:first-child) {
             margin-bottom: 10px; }
       .content .session .row .session-main #trigger-session, .content .session .row .session-main #join-session, .content .session .row .session-main #create-lobby {
->>>>>>> master
         display: none; }
 
 .profile-mobile-row {
