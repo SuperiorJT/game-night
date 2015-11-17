@@ -280,20 +280,27 @@ html, body {
                 }
 
                 .activity-panel {
+                    display: flex;
+                    flex-direction: column;
                     position: relative;
                     height: calc(40% - 10px);
                     @media (max-width: 991px) {
                         height: calc(24% - 10px);
                     }
                     .activity-panel-header {
+                        max-height: 25%;
                         text-align: center;
-                        font-size: 26px;
+                        font-size: 1.5em;
+                        @media (max-width: 991px) {
+                            font-size: 1em;
+                        }
                     }
                     .activity-panel-notification {
-                        display: block;
+                        flex: 1;
+                        display: flex;
+                        align-items: center;
                         position: relative;
                         width: 100%;
-                        background-color: #F4CDA1;
                         opacity: 0.5;
                         .notification-content {
                             display: inline-block;
@@ -333,14 +340,17 @@ html, body {
                             display: inline-block;
                             margin-left: auto;
                             margin-right: auto;
-                            opacity: 0.6;
-                            background-color: lightgray;
-                            
-                            img {
-                                opacity: 1.0;
+                            width: 0;
+                            height: 0;
+                            border-top: 20px solid transparent;
+                            border-bottom: 20px solid transparent;
+                            border-right: 15px solid black;
+
+                            &:hover {
+                                cursor: pointer;
                             }
                         }
-                        
+
                     }
                 }
 
