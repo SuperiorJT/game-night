@@ -1,36 +1,36 @@
 var socket = io();
 
 var state = {
-    online: false,
-    admin: false,
-    session: null,
-    sessionAvailable: false,
-    games: [],
-    rounds: [],
-    round: null,
-    user: null,
-    users: []
+    online : false,
+    admin : false,
+    session : null,
+    sessionAvailable : false,
+    games : [],
+    rounds : [],
+    round : null,
+    user : null,
+    users : []
 };
 
 var sessionAutoJoin = false;
 
 var transition = {
 
-    loginTo: function () {
+    loginTo: function() {
         $(".login")
-            .attr('style', 'display: -webkit-flex; display: flex; display: -ms-flexbox;')
-            .hide()
-            .fadeIn();
+        .attr('style', 'display: -webkit-flex; display: flex; display: -ms-flexbox;')
+        .hide()
+        .fadeIn();
     },
 
-    loginFrom: function () {
+    loginFrom: function() {
         console.log("loginFrom transition");
-        $('.login').fadeOut('fast', function () {
+        $('.login').fadeOut('fast', function() {
             transition.sessionTo();
         });
     },
 
-    sessionTo: function () {
+    sessionTo: function() {
         console.log("sessionTo transition");
         if (state.admin) {
             $('#trigger-session').show();
@@ -40,12 +40,12 @@ var transition = {
         }
         $('.username').html(state.user.username);
         $('.session')
-            .attr('style', 'display: -webkit-flex; display: flex; display: -ms-flexbox;')
-            .hide()
-            .fadeIn('fast');
+        .attr('style', 'display: -webkit-flex; display: flex; display: -ms-flexbox;')
+        .hide()
+        .fadeIn('fast');
     },
 
-    sessionJoin: function () {
+    sessionJoin: function() {
         console.log("session join transition");
         $('#join-session').html('Leave Session');
         $('#join-session').show();
@@ -54,12 +54,12 @@ var transition = {
         $('.session-buttons .fa').hide();
     },
 
-    sessionLeave: function () {
+    sessionLeave: function() {
         console.log("session leave transition");
         $('#join-session').html('Join Session');
     },
 
-    sessionToLogin: function () {
+    sessionToLogin: function() {
         console.log("sessionFrom transition");
         if (state.admin) {
             $('#trigger-session').hide();
@@ -91,27 +91,27 @@ var transition = {
 
 var sessionStatus = {
 
-    sessionAvailable: function () {
+    sessionAvailable: function() {
         $('.lobby-status').text('Join current session to view lobbies');
         $('#auto-join-session').hide();
         $('#join-session').show();
     },
 
-    sessionUnavailable: function () {
+    sessionUnavailable: function() {
         $('.lobby-status').text('No sessions in progress');
     },
 
-    sessionAutoJoin: function () {
+    sessionAutoJoin: function() {
         $('.lobby-status').text('Waiting to join next available session');
     },
 
-    lobbyNotFound: function () {
+    lobbyNotFound: function() {
         $('.lobby-status').text('There are no active lobbies in this session');
     }
 
 };
 
-socket.on('connect', function () {
+socket.on('connect', function() {
     console.log("Successfully connected to the game night server!");
     if (localStorage.userID) {
         socket.emit('login', localStorage.userID);
@@ -120,26 +120,21 @@ socket.on('connect', function () {
     }
 });
 
-<<<<<<< HEAD
-socket.on('disconnect', function () {
-    console.log("Disconnected to the game night server!");
-=======
 socket.on('disconnect', function() {
     console.log("Disconnected from the game night server!");
->>>>>>> master
 });
 
-socket.on('reconnect', function () {
+socket.on('reconnect', function() {
     if (localStorage.userID) {
         console.log("Successfully reconnected to the game night server!");
     }
 });
 
-socket.on('notification', function (data) {
+socket.on('notification', function(data) {
     notifications.notify(data);
 });
 
-socket.on('logged in', function (data) {
+socket.on('logged in', function(data) {
     state.online = true;
     state.user = data.user;
     expAnimate(state.user.exp);
@@ -157,20 +152,15 @@ socket.on('logged in', function (data) {
     transition.loginFrom();
 });
 
-socket.on('login failed', function () {
+socket.on('login failed', function() {
     console.log("login failed");
     transition.loginTo();
 });
 
-socket.on('receive games', function (data) {
+socket.on('receive games', function(data) {
     state.games = data;
 });
 
-<<<<<<< HEAD
-socket.on('receive rounds', function (data) {
-    state.rounds = data;
-});
-=======
 // socket.emit('create game', {
 //
 //     id: 1,
@@ -180,22 +170,13 @@ socket.on('receive rounds', function (data) {
 //     }
 //
 // });
->>>>>>> master
 
-//socket.emit('create game', {
+// socket.emit('create game', {
 //
-<<<<<<< HEAD
-//    id: 1,
-//    data: {
-//        name: "Halo: The Master Chief Collection",
-//        type: "First Person"
-//    }
-=======
 //     id: 1,
 //     data: {
 //         name: "Halo: The Master Chief Collection",
 //         type: "First Person Shooter"
 //     }
->>>>>>> master
 //
-//});
+// });

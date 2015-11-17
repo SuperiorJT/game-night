@@ -1,67 +1,52 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>Game Night!</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.css">
-    <link rel="stylesheet" href="css/master.css">
-</head>
-
-<body class="disable-scroll">
-    <!-- <div class="bg">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <title>Game Night!</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.css">
+        <link rel="stylesheet" href="css/master.css">
+    </head>
+    <body class="disable-scroll">
+        <!-- <div class="bg">
             <div class="bg-0"></div>
             <div class="bg-1"></div>
             <div class="bg-2"></div>
         </div> -->
 
-    <!-- <button type="button" class="btn btn-default test">Global Test</button> -->
+        <!-- <button type="button" class="btn btn-default test">Global Test</button> -->
 
-    <div class="content container-fluid">
+        <div class="content container-fluid">
 
-        <div class="row login vertical-align">
-            <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 panel" style="padding-bottom: 15px;">
-                <h2 class="text-center">Welcome to Game Night!</h2>
-                <form class="login-form">
-                    <div class="form-group">
-                        <label class="control-label" for="username">Username not available. Please try another.</label>
-                        <input type="text" placeholder="Username" name="username" id="username" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <input type="password" name="password" placeholder="Password" id="password" class="form-control" required>
-                    </div>
-
-                    <input type="submit" name="login" value="Login" class="btn btn-default" id="login">
-                    <input type="submit" name="register" value="Register" class="btn btn-default" id="register">
-                </form>
-            </div>
-        </div>
-
-        <div class="session">
-            <div class="row session-stretch">
-                <div class="col-md-4 col-lg-3 hidden-xs hidden-sm session-stretch">
-                    <div class="profile panel">
-                        <div class="profile-logout">
-                            <span class="fa fa-sign-out fa-rotate-180"></span>
+            <div class="row login vertical-align">
+                <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 panel" style="padding-bottom: 15px;">
+                    <h2 class="text-center">Welcome to Game Night!</h2>
+                    <form class="login-form">
+                        <div class="form-group">
+                            <label class="control-label" for="username">Username not available. Please try another.</label>
+                            <input type="text" placeholder="Username" name="username" id="username" class="form-control" required>
                         </div>
-                        <div class="profile-container">
-                            <div class="avatar">
-                                <img src="images/question_block.png" class="avatar-image img-responsive img-thumbnail" />
+
+                        <div class="form-group">
+                            <input type="password" name="password" placeholder="Password" id="password" class="form-control" required>
+                        </div>
+
+                        <input type="submit" name="login" value="Login" class="btn btn-default" id="login">
+                        <input type="submit" name="register" value="Register" class="btn btn-default" id="register">
+                    </form>
+                </div>
+            </div>
+
+            <div class="session">
+                <div class="row session-stretch">
+                    <div class="col-md-4 col-lg-3 hidden-xs hidden-sm session-stretch">
+                        <div class="profile panel">
+                            <div class="profile-logout">
+                                <span class="fa fa-sign-out fa-rotate-180"></span>
                             </div>
-<<<<<<< HEAD
-                            <div class="profile-section-exp">
-                                <div class="username"></div>
-                                <div class="rank">Level: <span class="rank-value">0</span></div>
-                                <div class="exp">
-                                    <div class="exp-value"><span class="exp-amount">0</span>exp</div>
-                                    <div class="exp-bar">
-                                        <div class="exp-fill"></div>
-=======
                             <div class="profile-container">
                                 <div class="avatar">
                                     <img src="images/avatars/question_block.png" class="avatar-image img-responsive img-thumbnail" />
@@ -75,64 +60,61 @@
                                             <div class="exp-fill"></div>
                                         </div>
                                         <div class="exp-rank">2</div>
->>>>>>> master
                                     </div>
-                                    <div class="exp-rank">1</div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="profile-divider"></div>
-                        <table class="table table-bordered user-list">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Current Players
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                            <div class="profile-divider"></div>
+                            <table class="table table-bordered user-list">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Current Players
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-md-4 col-lg-6 session-main session-stretch">
-                    <div class="panel lobby-panel">
-                        <div class="lobby-status">
-                            There are no sessions in progress
-                        </div>
-                        <table class="table table-bordered table-hover lobby-list">
-                            <thead>
-                                <tr>
-                                    <th class="lobby-table-id">
-                                        ID
-                                    </th>
-                                    <th class="lobby-table-game">
-                                        Game
-                                    </th>
-                                    <th class="lobby-table-admin">
-                                        Lobby Admin
-                                    </th>
-                                    <th class="lobby-table-status">
-                                        Status
-                                    </th>
-                                    <th class="lobby-table-time">
-                                        Time
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                        <div class="session-buttons">
-                            <span class="fa fa-circle-o-notch fa-spin"></span>
-                            <button type="button" name="autoJoinSession" class="btn btn-default" id="auto-join-session">Auto-Join Session</button>
-                            <button type="button" name="createLobby" class="btn btn-default" id="create-lobby">Create Lobby</button>
-                            <button type="button" name="joinSession" class="btn btn-default" id="join-session">Join Session</button>
-                            <button type="button" name="createSession" class="btn btn-default" id="trigger-session">Start Session</button>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="panel activity-panel">
+                    <div class="col-xs-12 col-md-4 col-lg-6 session-main session-stretch">
+                        <div class="panel lobby-panel">
+                            <div class="lobby-status">
+                                There are no sessions in progress
+                            </div>
+                            <table class="table table-bordered table-hover lobby-list">
+                                <thead>
+                                    <tr>
+                                        <th class="lobby-table-id">
+                                            ID
+                                        </th>
+                                        <th class="lobby-table-game">
+                                            Game
+                                        </th>
+                                        <th class="lobby-table-admin">
+                                            Lobby Admin
+                                        </th>
+                                        <th class="lobby-table-status">
+                                            Status
+                                        </th>
+                                        <th class="lobby-table-time">
+                                            Time
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <div class="session-buttons">
+                                <span class="fa fa-circle-o-notch fa-spin"></span>
+                                <button type="button" name="autoJoinSession" class="btn btn-default" id="auto-join-session">Auto-Join Session</button>
+                                <button type="button" name="createLobby" class="btn btn-default" id="create-lobby">Create Lobby</button>
+                                <button type="button" name="joinSession" class="btn btn-default" id="join-session">Join Session</button>
+                                <button type="button" name="createSession" class="btn btn-default" id="trigger-session">Start Session</button>
+                            </div>
+                        </div>
+                        <div class="panel activity-panel">
                         <div class="activity-panel-header">
                             Recent Events
                         </div>
@@ -146,17 +128,7 @@
                                 <img src="images/arrow.png" />
                             </div>
                         </div>
-<<<<<<< HEAD
                     </div>
-                    <div class="panel lobby-active-panel">
-                        <div class="lobby-active-status">
-                            <div class="lobby-leader">Lobby Leader: <span class="lobby-leader-value"></span></div>
-                            <div class="lobby-game">Game: <span class="lobby-game-value"></span></div>
-                            <div class="lobby-status">Status: <span class="lobby-status-value"></span></div>
-=======
-                        <div class="panel activity-panel">
-
-                        </div>
                         <div class="panel lobby-active-panel">
                             <div class="lobby-active-status">
                                 <div class="lobby-active-leader">Lobby Leader: <span class="lobby-active-leader-value"></span></div>
@@ -172,43 +144,9 @@
                                 <button type="button" name="leaveLobby" class="btn btn-default" id="leave-lobby">Leave Lobby</button>
                                 <button type="button" name="roundStart" class="btn btn-default" id="round-start">Start Round</button>
                             </div>
->>>>>>> master
                         </div>
-                        <table class="table table-bordered table-hover lobby-players">
-                            <thead>
-                                <tr>
-                                    <th class="lobby-players-name">
-                                        Name
-                                    </th>
-                                    <th class="lobby-players-rank">
-                                        Level
-                                    </th>
-                                    <th class="lobby-players-skill">
-                                        Skill
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
-<<<<<<< HEAD
-            </div>
-            <div class="row profile-mobile-row visible-xs-block visible-sm-block">
-                <div class="profile-mobile panel">
-                    <div class="profile-container">
-                        <div class="avatar-mobile">
-                            <img src="images/question_block.png" class="avatar-image img-responsive img-thumbnail" />
-                        </div>
-                        <div class="profile-mobile-section-exp">
-                            <div class="username"></div>
-                            <div class="rank">Level: <span class="rank-value">0</span></div>
-                            <div class="exp-mobile">
-                                <div class="exp-value-mobile"><span class="exp-amount">0</span>exp</div>
-                                <div class="exp-bar-mobile">
-                                    <div class="exp-fill"></div>
-=======
                 <div class="row profile-mobile-row visible-xs-block visible-sm-block">
                     <div class="profile-mobile panel">
                         <div class="profile-container">
@@ -224,50 +162,32 @@
                                         <div class="exp-fill"></div>
                                     </div>
                                     <div class="exp-rank">2</div>
->>>>>>> master
                                 </div>
-                                <div class="exp-rank">1</div>
                             </div>
                         </div>
+                        <div class="profile-logout">
+                            <span class="fa fa-sign-out fa-rotate-180"></span>
+                        </div>
+                        <div class="profile-mobile-close">
+                            <span class="fa fa-chevron-down"></span>
+                        </div>
+                        <div class="profile-divider"></div>
                     </div>
-                    <div class="profile-logout">
-                        <span class="fa fa-sign-out fa-rotate-180"></span>
-                    </div>
-                    <div class="profile-mobile-close">
-                        <span class="fa fa-chevron-down"></span>
-                    </div>
-                    <div class="profile-divider"></div>
                 </div>
+            </div>
+
+        </div>
+
+        <div class="notifications col-xs-12 col-md-4 col-lg-3">
+            <div class="notifications-list"></div>
+        </div>
+
+        <div class="popup col-xs-12">
+            <div class="popup-content panel">
+
             </div>
         </div>
 
-    </div>
-
-    <div class="notifications col-xs-12 col-md-4 col-lg-3">
-        <div class="notifications-list"></div>
-    </div>
-
-    <div class="popup col-xs-12">
-        <div class="popup-content panel">
-
-        </div>
-    </div>
-
-    <script src="components/jquery/jquery.js"></script>
-    <script src="components/velocity/velocity.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="js/numbers.js"></script>
-    <script src="js/notifications.js"></script>
-    <script src="js/io.js"></script>
-    <script src="js/login.js"></script>
-    <script src="js/profile-panel.js"></script>
-    <script src="js/session.js"></script>
-</body>
-
-<<<<<<< HEAD
-</html>
-=======
         <script src="components/jquery/jquery.js"></script>
         <script src="components/velocity/velocity.js"></script>
         <script src="js/bootstrap.min.js"></script>
@@ -282,4 +202,3 @@
         <script src="js/round.js"></script>
     </body>
 </html>
->>>>>>> master

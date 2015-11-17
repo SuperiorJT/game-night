@@ -1,28 +1,27 @@
 @import "notifications";
-<<<<<<< HEAD
-=======
 @import "popup-create-lobby";
 @import "popup-claim-victory";
 @import "popup-declare-winners";
 
->>>>>>> master
 @font-face {
-    font-family: 'VisitorTT1BRK';
-    src: url('../fonts/VisitorTT1BRK.woff') format('woff'), url('../fonts/VisitorTT1BRK.ttf') format('truetype'), url('../fonts/VisitorTT1BRK.svg#VisitorTT1BRK') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'VisitorTT1BRK';
+  src: url('../fonts/VisitorTT1BRK.woff') format('woff'),
+       url('../fonts/VisitorTT1BRK.ttf') format('truetype'),
+       url('../fonts/VisitorTT1BRK.svg#VisitorTT1BRK') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'visitor1';
-    src: url('../fonts/visitor1.eot');
-    src: url('../fonts/visitor1.eot?#iefix') format('embedded-opentype'), url('../fonts/visitor1.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'visitor1';
+  src: url('../fonts/visitor1.eot');
+  src: url('../fonts/visitor1.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/visitor1.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
 }
 
-html,
-body {
+html, body {
     font-family: 'visitor1', 'VisitorTT1BRK', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     height: 100%;
     position: relative;
@@ -40,77 +39,89 @@ body {
 }
 
 @keyframes animatedBackground {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(-20000000px);
-    }
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-20000000px);
+	}
 }
 
 .bg {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    overflow: hidden;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  overflow: hidden;
+
     .bg-0 {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 3000000%;
-        height: 20vh;
-        background: url("../images/mario-ground.png");
-        background-size: auto 20vh;
-        background-position: 0px 0px;
-        background-repeat: repeat-x;
-        animation-name: animatedBackground;
-        animation-duration: 200000s;
-        animation-timing-function: linear;
-        animation-iteration-count: infinite;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    	width: 3000000%;
+    	height: 20vh;
+    	background: url("../images/mario-ground.png");
+      background-size: auto 20vh;
+    	background-position: 0px 0px;
+    	background-repeat: repeat-x;
+      animation-name: animatedBackground;
+      animation-duration: 200000s;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
     }
+
     .bg-1 {
-        position: absolute;
-        bottom: 20vh;
-        width: 3000000%;
-        height: 50vh;
-        background-image: url("../images/mario-hills.png");
-        background-size: auto 50vh;
-        background-position: 0px 0px;
-        background-repeat: repeat-x;
-        animation-name: animatedBackground;
-        animation-duration: 200000s;
-        animation-timing-function: linear;
-        animation-iteration-count: infinite;
+      position: absolute;
+      bottom: 20vh;
+    	width: 3000000%;
+    	height: 50vh;
+    	background-image: url("../images/mario-hills.png");
+      background-size: auto 50vh;
+    	background-position: 0px 0px;
+    	background-repeat: repeat-x;
+      animation-name: animatedBackground;
+      animation-duration: 200000s;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
     }
 }
 
 .content {
     height: 100%;
+
     .login {
         display: none;
         min-height: 100%;
+
         form {
+
             label[for="username"] {
                 display: none;
             }
+
             input[type="submit"] {
                 width: calc(50% - 5px);
             }
+
         }
     }
+
     .session {
         display: none;
         height: 100%;
         flex-direction: column;
+
         .session-stretch {
             height: calc(100% - 15px);
         }
+
         .row {
+
             .profile {
                 margin-top: 15px;
                 padding: 10px;
                 height: 100%;
                 position: relative;
+
                 .profile-logout {
                     position: absolute;
                     right: 0;
@@ -119,24 +130,31 @@ body {
                     margin: 5px;
                     height: 27px;
                     z-index: 3;
+
                     &:hover {
                         cursor: pointer;
                     }
                 }
+
                 .profile-container {
+
                     position: relative;
                     width: 100%;
+
                     div {
                         display: inline-block;
                     }
+
                     .avatar {
                         width: 25%;
                         padding-right: 10px;
                     }
+
                     .profile-section-exp {
                         height: 100%;
                         width: 75%;
                         position: absolute;
+
                         .username {
                             display: block;
                             height: 25%;
@@ -145,6 +163,7 @@ body {
                             font-size: 150%;
                             line-height: 1em;
                         }
+
                         .rank {
                             position: relative;
                             top: -4px;
@@ -152,11 +171,13 @@ body {
                             font-size: 9pt;
                             font-size: 85%;
                         }
+
                         .exp {
                             position: relative;
                             top: -10%;
                             height: 50%;
                             display: block;
+
                             .exp-value {
                                 position: absolute;
                                 display: inline-block;
@@ -164,18 +185,21 @@ body {
                                 font-size: 75%;
                                 height: 25%;
                             }
+
                             .exp-bar {
                                 border: 1px solid black;
                                 height: 55%;
                                 width: 85%;
                                 bottom: 0;
                                 position: absolute;
+
                                 .exp-fill {
                                     height: 100%;
                                     width: 0%;
                                     background-color: black;
                                 }
                             }
+
                             .exp-rank {
                                 position: absolute;
                                 right: 0;
@@ -186,6 +210,7 @@ body {
                         }
                     }
                 }
+
                 .profile-divider {
                     display: block;
                     position: relative;
@@ -193,33 +218,42 @@ body {
                     margin: 10px 0;
                     background-color: black;
                 }
+
                 .user-list {
                     thead th {
                         text-align: center;
                     }
                 }
             }
+
             .session-main {
                 padding: 0;
+
                 @media (max-width: 991px) {
                     padding: 0 15px;
                 }
+
                 .lobby-panel {
                     text-align: center;
                     padding: 10px;
                     height: calc(60% - 10px);
                     margin-top: 15px;
                     position: relative;
+
+
+
                     .lobby-status {
                         opacity: .5;
                         position: relative;
                         top: calc(50% - 34px);
                     }
+
                     .lobby-list {
                         display: none;
                         position: relative;
                         height: calc(100% - 44px);
                         text-align: initial;
+
                         tbody {
                             tr {
                                 max-height: 40px;
@@ -231,17 +265,20 @@ body {
                             }
                         }
                     }
+
                     .session-buttons {
                         position: absolute;
                         width: 100%;
                         bottom: 10px;
                         left: 0;
+
                         .fa {
                             display: none;
                             padding: 1px;
                         }
                     }
                 }
+
                 .activity-panel {
                     position: relative;
                     height: calc(40% - 10px);
@@ -306,6 +343,7 @@ body {
                         
                     }
                 }
+
                 .lobby-active-panel {
                     display: none;
                     margin-top: 15px;
@@ -384,12 +422,13 @@ body {
                     }
 
                 }
-                #trigger-session,
-                #join-session,
-                #create-lobby {
+
+                #trigger-session, #join-session, #create-lobby {
                     display: none;
                 }
+
             }
+
         }
     }
 }
@@ -399,6 +438,7 @@ body {
     position: absolute;
     top: 86vh;
     width: 100%;
+
     .profile-mobile {
         position: relative;
         height: 100vh;
@@ -406,6 +446,7 @@ body {
         -webkit-box-shadow: 0 -6px 0 0 rgba(0, 0, 0, 0.2);
         -moz-box-shadow: 0 -6px 0 0 rgba(0, 0, 0, 0.2);
         box-shadow: 0 -6px 0 0 rgba(0, 0, 0, 0.2);
+
         .profile-mobile-close {
             display: none;
             position: absolute;
@@ -413,6 +454,7 @@ body {
             right: 0;
             top: 0;
         }
+
         .profile-logout {
             display: none;
             position: absolute;
@@ -420,24 +462,31 @@ body {
             right: 40px;
             padding: 10px;
         }
+
         .profile-container {
             position: relative;
             height: calc(14vh - 10px);
+
             div {
                 display: inline-block;
             }
+
             .avatar-mobile {
                 width: auto;
                 height: 100%;
                 padding-right: 5px;
+
                 img {
                     height: 100%;
                 }
+
             }
+
             .profile-mobile-section-exp {
                 height: 100%;
                 width: 75%;
                 position: absolute;
+
                 .username {
                     display: block;
                     height: 25%;
@@ -446,6 +495,7 @@ body {
                     font-size: 150%;
                     line-height: 1em;
                 }
+
                 .rank {
                     position: relative;
                     top: -4px;
@@ -453,11 +503,13 @@ body {
                     font-size: 9pt;
                     font-size: 85%;
                 }
+
                 .exp-mobile {
                     position: relative;
                     top: -10%;
                     height: 50%;
                     display: block;
+
                     .exp-value-mobile {
                         position: absolute;
                         display: inline-block;
@@ -465,18 +517,21 @@ body {
                         font-size: 75%;
                         height: 25%;
                     }
+
                     .exp-bar-mobile {
                         border: 1px solid black;
                         height: 55%;
                         width: 85%;
                         bottom: 0;
                         position: absolute;
+
                         .exp-fill {
                             height: 100%;
                             width: 0%;
                             background-color: black;
                         }
                     }
+
                     .exp-rank {
                         position: absolute;
                         right: 0;
@@ -485,8 +540,10 @@ body {
                         width: 11%;
                     }
                 }
+
             }
         }
+
         .profile-divider {
             display: block;
             position: relative;
@@ -494,6 +551,7 @@ body {
             margin: 10px 0;
             background-color: black;
         }
+
     }
 }
 
@@ -506,6 +564,7 @@ body {
     width: 100%;
     z-index: 5;
     background-color: rgba(0, 0, 0, 0.6);
+
     .popup-content {
         position: relative;
         padding: 15px;
