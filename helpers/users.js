@@ -2,6 +2,7 @@ var client = require('../helpers/db');
 var bcrypt = require('bcrypt');
 var format = require('./response-format');
 var cache = require('./cache');
+var _ = require('lodash');
 
 module.exports.existsForUsername = function(name, callback) {
     client.smembers('users', function(err, reply) {
@@ -89,52 +90,39 @@ module.exports.login = function(password, id, callback) {
 };
 
 module.exports.checkStatus = function(id, callback) {
-    var userFound = false;
-    cache.users.some(function(user) {
-        if (user.id == id) {
-            userFound = true;
-            callback(user);
-        }
-        return userFound;
-    });
-    if (!userFound) {
+    var user = cache.users[id];
+    if (user) {
+        callback(user);
+    } else {
         callback(format.fail("This account is not logged in!", null));
     }
 };
 
 module.exports.updateState = function(id, online, sessionId, lobbyId) {
     client.smembers('users', function(err, reply) {
-        reply.some(function(val) {
-            if (id == JSON.parse(val).id) {
-                var index = null;
-                cache.users.some(function(val, i) {
-                    if (val.id == id) {
-                        index = i;
-                        return true;
-                    }
-                    return false;
-                });
-                if (online != null) {
-                    if (index != null) {
-                        cache.users[index].online = online;
-                    }
-                    client.hset('user:' + id, 'online', online);
-                }
-                if (lobbyId != null) {
-                    if (index != null) {
-                        cache.users[index].lobby = lobbyId;
-                    }
-                    client.hset('user:' + id, 'lobby', lobbyId);
-                }
-                if (sessionId != null) {
-                    if (index != null) {
-                        cache.users[index].session = sessionId;
-                    }
-                    client.hset('user:' + id, 'session', sessionId);
-                }
-                return true;
-            }
-            return false;
+        _.forEach(reply, function(val, key) {
+            reply[key] = JSON.parse(val);
+            reply[key].id = parseInt(reply[key].id);
         });
+        if (_.find(reply, {'id': id})) {
+            if (online != null) {
+                if (cache.users[id]) {
+                    cache.users[id].online = online;
+                }
+                client.hset('user:' + id, 'online', online);
+            }
+            if (lobbyId != null) {
+                if (cache.users[id]) {
+                    cache.users[id].lobby = lobbyId;
+                }
+                client.hset('user:' + id, 'lobby', lobbyId);
+            }
+            if (sessionId != null) {
+                if (cache.users[id]) {
+                    cache.users[id].session = sessionId;
+                }
+                client.hset('user:' + id, 'session', sessionId);
+            }
+        }
     });
 };

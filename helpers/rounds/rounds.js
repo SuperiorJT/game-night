@@ -3,6 +3,7 @@ var format = require('../response-format');
 var users = require('../users');
 var cache = require('../cache');
 var games = require('../games/games');
+var _ = require('lodash');
 
 module.exports.create = function(data, callback) {
     if (!cache.session.id) {
@@ -25,18 +26,17 @@ module.exports.create = function(data, callback) {
                     if (err) {
                         callback(err, false);
                     } else {
-                        var admin = cache.users.filter(function(val) {
-                            return val.id == data.admin;
-                        })[0];
+                        var admin = cache.users[data.admin];
                         if (admin) {
                             data.admin = admin;
                         }
                         games.getGameById(data.game, function(reply) {
                             data.game = reply;
-                            data.users = [];
-                            data.winners = [];
+                            data.users = {};
+                            data.winners = {};
                             data.status = 1 + " / " + data.size;
-                            cache.rounds.push(data);
+                            cache.rounds[data.id] = data;
+                            console.log(cache.rounds);
                             client.incr('round:gen-id');
                             callback(null, data);
                         });
@@ -56,37 +56,29 @@ module.exports.join = function(data, callback) {
     if (!data.id || !data.round) {
         callback(format.fail("Missing required fields.", null));
     } else {
-        var roundFound = false;
-        cache.rounds.some(function(round, index) {
-            if (round.id == data.round) {
-                roundFound = true;
-                if (round.users.length == round.size) {
-                    callback(format.fail("Lobby is full."), null);
-                } else if (round.startTime) {
-                    callback(format.fail("Cannot join lobby while round is in progress."), null);
-                } else {
-                    users.checkStatus(data.id, function(reply) {
-                        if (reply.error) {
-                            callback(reply);
-                        } else if (reply.lobby) {
-                            callback(format.fail("You are already in a lobby!", null));
-                        } else {
-                            cache.rounds[index].users.push(reply);
-                            var roundUsers = cache.rounds[index].users;
-                            roundUsers.forEach(function(val, index) {
-                                roundUsers[index] = val;
-                            });
-                            cache.rounds[index].status = roundUsers.length + " / " + round.size;
-                            users.updateState(data.id, null, null, round.id);
-                            client.hset('round:' + data.round, 'users', JSON.stringify(roundUsers));
-                            callback(cache.rounds[index]);
-                        }
-                    });
-                }
+        var round = cache.rounds[data.round];
+        if (round) {
+            if (round.users.length == round.size) {
+                callback(format.fail("Lobby is full."), null);
+            } else if (round.startTime) {
+                callback(format.fail("Cannot join lobby while round is in progress."), null);
+            } else {
+                users.checkStatus(data.id, function(reply) {
+                    if (reply.error) {
+                        callback(reply);
+                    } else if (reply.lobby) {
+                        callback(format.fail("You are already in a lobby!", null));
+                    } else {
+                        cache.rounds[round.id].users[reply.id] = reply;
+                        var roundUsers = cache.rounds[round.id].users;
+                        cache.rounds[round.id].status = _.size(roundUsers) + " / " + round.size;
+                        users.updateState(data.id, null, null, round.id);
+                        client.hset('round:' + data.round, 'users', JSON.stringify(roundUsers));
+                        callback(cache.rounds[round.id]);
+                    }
+                });
             }
-            return roundFound;
-        });
-        if (!roundFound) {
+        } else {
             callback(format.fail("Lobby does not exist or is not available.", null));
         }
     }
@@ -101,35 +93,20 @@ module.exports.leave = function(data, callback) {
     if (!data.id || !data.round) {
         callback(format.fail("Missing required fields.", null));
     } else {
-        var roundFound = false;
-        cache.rounds.some(function(round, index, array) {
-            if (round.id == data.round) {
-                roundFound = true;
-                var userFound = false;
-                cache.rounds[index].users.some(function(user, userIndex) {
-                    if (user.id == data.id) {
-                        userFound = true;
-                        cache.rounds[index].users = cache.rounds[index].users.filter(function(val) {
-                            return val.id != user.id;
-                        });
-                        var roundUsers = cache.rounds[index].users;
-                        roundUsers.forEach(function(val, index) {
-                            roundUsers[index] = val;
-                        });
-                        cache.rounds[index].status = roundUsers.length + " / " + round.size;
-                        client.hset('round:' + data.round, 'users', JSON.stringify(roundUsers));
-                        users.updateState(data.id, null, null, 0);
-                        callback(round);
-                    }
-                    return userFound;
-                });
-                if (!userFound) {
-                    callback(format.fail("You are not in that lobby.", null));
-                }
+        var round = cache.rounds[data.round];
+        if (round) {
+            var user = cache.rounds[round.id].users[data.id];
+            if (user) {
+                delete cache.rounds[round.id].users[user.id];
+                var roundUsers = cache.rounds[round.id].users;
+                cache.rounds[round.id].status = _.size(roundUsers) + " / " + round.size;
+                client.hset('round:' + data.round, 'users', JSON.stringify(roundUsers));
+                users.updateState(data.id, null, null, 0);
+                callback(round);
+            } else {
+                callback(format.fail("You are not in that lobby.", null));
             }
-            return roundFound;
-        });
-        if (!roundFound) {
+        } else {
             callback(format.fail("Lobby does not exist or is not available.", null));
         }
     }
@@ -139,22 +116,17 @@ module.exports.start = function(data, callback) {
     if (!data.round) {
         callback(format.fail("Missing required fields.", null));
     } else {
-        var roundFound = false;
-        cache.rounds.some(function(round, index, array) {
-            if (round.id == data.round) {
-                roundFound = true;
-                if (round.users.length > 1) {
-                    var time = new Date().getTime();
-                    cache.rounds[index].startTime = time;
-                    cache.rounds[index].status = "In Progress";
-                    callback(cache.rounds[index]);
-                } else {
-                    callback(format.fail("Not enough players to start game!", null));
-                }
+        var round = cache.rounds[data.round];
+        if (round) {
+            if (_.size(round.users) > 1) {
+                var time = new Date().getTime();
+                cache.rounds[round.id].startTime = time;
+                cache.rounds[round.id].status = "In Progress";
+                callback(cache.rounds[round.id]);
+            } else {
+                callback(format.fail("Not enough players to start game!", null));
             }
-            return roundFound;
-        });
-        if (!roundFound) {
+        } else {
             callback(format.fail("Lobby does not exist or is not available.", null));
         }
     }
@@ -164,18 +136,13 @@ module.exports.finish = function(data, callback) {
     if (!data.round) {
         callback(format.fail("Missing required fields.", null));
     } else {
-        var roundFound = false;
-        cache.rounds.some(function(round, index, array) {
-            if (round.id == data.round) {
-                roundFound = true;
-                var time = new Date().getTime();
-                cache.rounds[index].endTime = time;
-                cache.rounds[index].status = "Finishing...";
-                callback(round);
-            }
-            return roundFound;
-        });
-        if (!roundFound) {
+        var round = cache.rounds[data.round];
+        if (round) {
+            var time = new Date().getTime();
+            cache.rounds[round.id].endTime = time;
+            cache.rounds[round.id].status = "Finishing...";
+            callback(round);
+        } else {
             callback(format.fail("Lobby does not exist or is not available.", null));
         }
     }
@@ -185,34 +152,24 @@ module.exports.claimVictory = function(data, callback) {
     if (!data.id || !data.round || !data.place) {
         callback(format.fail("Missing required fields.", null));
     } else {
-        var roundFound = false;
-        cache.rounds.some(function(round, index, array) {
-            if (round.id == data.round) {
-                roundFound = true;
-                var currentTime = new Date().getTime();
-                if (currentTime - round.endTime < 30000) {
-                    var userFound = cache.rounds[index].users.some(function(val) {
-                        if (val.id == data.id) {
-                            cache.rounds[index].winners.push({
-                                user: val,
-                                place: data.place
-                            });
-                            callback(cache.rounds[index]);
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    });
-                    if (!userFound) {
-                        callback(format.fail("You are not in this lobby!", null));
-                    }
+        var round = cache.rounds[data.round];
+        if (round) {
+            var currentTime = new Date().getTime();
+            if (currentTime - round.endTime < 30000) {
+                var user = cache.rounds[round.id].users[data.id];
+                if (user) {
+                    cache.rounds[round.id].winners[user.id] = {
+                        user: user,
+                        place: data.place
+                    };
+                    callback(cache.rounds[round.id]);
                 } else {
-                    callback(format.fail("You are too late to claim victory.", null));
+                    callback(format.fail("You are not in this lobby!", null));
                 }
+            } else {
+                callback(format.fail("You are too late to claim victory.", null));
             }
-            return roundFound;
-        });
-        if (!roundFound) {
+        } else {
             callback(format.fail("Lobby does not exist or is not available.", null));
         }
     }
@@ -227,22 +184,15 @@ module.exports.declareWinners = function(data, callback) {
     if (!data.round || !data.winners) {
         callback(format.fail("Missing required fields.", null));
     } else {
-        var roundFound = false;
-        cache.rounds.some(function(round, index, array) {
-            if (round.id == data.round) {
-                roundFound = true;
-                cache.rounds[index].winners = data.winners;
-                if (cache.session.rounds.indexOf(data.round.id) == -1) {
-                    cache.session.rounds.push(data.round.id);
-                }
-                round.users.forEach(function(val) {
-                    users.updateState(val, null, null, 0);
-                });
-                callback(round);
-            }
-            return roundFound;
-        });
-        if (!roundFound) {
+        var round = cache.rounds[data.round];
+        if (round) {
+            cache.rounds[round.id].winners = data.winners;
+            cache.session.rounds[round.id] = round;
+            _.forEach(round.users, function(val) {
+                users.updateState(val, null, null, 0);
+            });
+            callback(round);
+        } else {
             callback(format.fail("Lobby does not exist or is not available.", null));
         }
     }
@@ -257,22 +207,15 @@ module.exports.close = function(data, callback) {
     if (!data.round) {
         callback(format.fail("Missing required fields.", null));
     } else {
-        var roundFound = false;
-        cache.rounds.some(function(round, index, array) {
-            if (round.id == data.round) {
-                roundFound = true;
-                client.del('round:' + round.id);
-                round.users.forEach(function(val) {
-                    users.updateState(val.id, null, null, 0);
-                });
-                cache.rounds = cache.rounds.filter(function(val) {
-                    return val.id != round.id;
-                });
-                callback(round);
-            }
-            return roundFound;
-        });
-        if (!roundFound) {
+        var round = cache.rounds[data.round];
+        if (round) {
+            client.del('round:' + round.id);
+            _.forEach(round.users, function(val) {
+                users.updateState(val.id, null, null, 0);
+            });
+            delete cache.rounds[round.id];
+            callback(round);
+        } else {
             callback(format.fail("Lobby does not exist or is not available.", null));
         }
     }
@@ -285,67 +228,52 @@ module.exports.updateStats = function(round, userCallback, callback) {
     var expWinMod = .25;
     var baseExpReward = 25;
     var bonusExpMultiplier = 1;
-    round.users.forEach(function(user) {
+    _.forEach(round.users, function(user) {
         var exp = baseExpReward * bonusExpMultiplier * expTimeMultiplier;
-        var winner = round.winners.filter(function(val) {
-            return val.user.id == user.id;
-        })[0];
-        if (winner.place != round.users.length) {
-            expWinMultiplier = 1 + (expWinMod / winner.place);
-        } else {
-            expWinMultiplier = 1;
-        }
-        user.exp = user.exp + (exp * expWinMultiplier);
-        cache.users.some(function(val, index) {
-            if (val.id == user.id) {
-                cache.users[index].exp = Math.floor(user.exp);
-                userCallback(null, cache.users[index]);
-                return true;
+        var winner = round.winners[user.id];
+        if (winner) {
+            if (winner.place != _.size(round.users)) {
+                expWinMultiplier = 1 + (expWinMod / winner.place);
+            } else {
+                expWinMultiplier = 1;
             }
-            return false;
-        });
-        client.hset('user:' + user.id, 'exp', Math.floor(user.exp));
-        if (Math.floor(user.exp) >= ((user.rank + 1) * 1000)) {
-            cache.users[index].rank++;
-            client.hset('user:' + user.id, 'rank', user.rank);
+            user.exp = user.exp + (exp * expWinMultiplier);
+            cache.users[user.id].exp = Math.floor(user.exp);
+            userCallback(null, cache.users[user.id]);
+            client.hset('user:' + user.id, 'exp', Math.floor(user.exp));
+            if (Math.floor(user.exp) >= ((user.rank + 1) * 1000)) {
+                cache.users[user.id].rank++;
+                client.hset('user:' + user.id, 'rank', user.rank);
+            }
         }
     });
-    cache.rounds.some(function(val, index) {
-        if (val.id == round.id) {
-            resetRoundToIds(index);
-            round.status = "Complete";
-            client.hmset('round:' + val.id, cache.rounds[index], function() {
-                cache.rounds = cache.rounds.filter(function(val) {
-                    return val.id != round.id;
-                });
-                callback(null, round);
-            });
-            return true;
-        } else {
-            return false;
-        }
+    resetRoundToIds(round.id);
+    round.status = "Complete";
+    client.hmset('round:' + round.id, cache.rounds[round.id], function() {
+        delete cache.rounds[round.id];
+        callback(null, round);
     });
-}
+};
 
-function resetRoundToIds(index) {
+function resetRoundToIds(id) {
     var users = [];
     var winners = [];
-    var admin = cache.rounds[index].admin.id;
-    var game = cache.rounds[index].game.id;
+    var admin = cache.rounds[id].admin.id;
+    var game = cache.rounds[id].game.id;
 
-    cache.rounds[index].users.forEach(function(val) {
+    _.forEach(cache.rounds[id].users, function(val) {
         users.push(val.id);
     });
 
-    cache.rounds[index].winners.forEach(function(val) {
+    _.forEach(cache.rounds[id].winners, function(val) {
         winners.push({
             user: val.user.id,
             place: val.place
         });
     });
 
-    cache.rounds[index].users = users;
-    cache.rounds[index].winners = winners;
-    cache.rounds[index].admin = admin;
-    cache.rounds[index].game = game;
+    cache.rounds[id].users = users;
+    cache.rounds[id].winners = winners;
+    cache.rounds[id].admin = admin;
+    cache.rounds[id].game = game;
 };

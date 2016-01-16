@@ -22,7 +22,7 @@ $('#round-start').click(function() {
 });
 
 socket.on('round created', function(data) {
-    state.rounds.push(data);
+    state.rounds[data.id] = data;
     updateDisplayedRounds();
     if (data.admin.id == localStorage.userID) {
         $('#round-start').text('Start Round');
@@ -146,14 +146,13 @@ function generateWinnersList() {
     $('.declare-winners-list').children('li').each(function() {
         var li = $(this);
         var user = state.round.users.filter(function(val) {
-            console.log(val.username + " " + li.children('span').eq(0).text());
             return val.username == li.children('span').eq(0).text();
         })[0];
         if (user) {
-            winners.push({
+            winners[user.id] = {
                 user: user,
                 place: li.children('select').eq(0).val()
-            });
+            };
         }
     });
     return winners;
@@ -184,13 +183,11 @@ socket.on('round left', function(data) {
 });
 
 function currentRoundIsAvailable() {
-    return state.rounds.some(function(val) {
-        if (val.id == state.round.id) {
-            return true;
-        } else {
-            return false;
-        }
-    });
+    if (state.rounds[state.round.id]) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 socket.on('round started', function(data) {
@@ -254,7 +251,7 @@ socket.on('exp update', function(exp) {
 function updateCurrentRound() {
     $('.lobby-active-status-value').text(state.round.status);
     $('.lobby-active-players').html('<div>Players</div>');
-    state.round.users.forEach(function(val) {
+    _.forEach(state.round.users, function(val) {
         $('.lobby-active-players').append('<div class="lobby-active-player">' + val.username + '</div>');
     });
 };

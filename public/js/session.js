@@ -194,7 +194,7 @@ socket.on('session left', function() {
 
 var updateDisplayedRounds = function() {
     $('.lobby-list tbody').html('');
-    state.rounds.forEach(function(val) {
+    _.forEach(state.rounds, function(val) {
         console.log('added lobby');
         var lobbyItem = $('<tr><td>' + val.id + '</td><td>' + val.game.name + '</td><td>' + val.admin.username + '</td><td>' + val.status + '</td><td>' + val.startTime + '</td></tr>');
         lobbyItem.click(function() {

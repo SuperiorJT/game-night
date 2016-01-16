@@ -12,31 +12,19 @@ var clearUserList = function() {
 };
 
 var addUserToList = function(user) {
-    var notFound = userList.every(function(val) {
-        if (val.username == user.username) {
-            return false;
-        } else {
-            return true;
-        }
-    });
-    if (notFound) {
-        var row = new userRow(user);
-        row.appendTo('.user-list tbody');
-        userList.push(user);
+    var found = userList[user.id];
+    if (!found) {
+        displayUser(user);
+        userList[user.id] = user;
     }
 };
 
 var removeUserFromList = function(user) {
-    userList.some(function(val) {
-        if (val.id == user.id) {
-            userList = userList.filter(function(val) {
-                return val.id != user.id;
-            });
-            $('.user-row-' + user.id).remove();
-            return true;
-        }
-        return false;
-    });
+    var found = userList[user.id];
+    if (found) {
+        delete userList[user.id];
+        $('.user-row-' + user.id).remove();
+    }
 };
 
 var displayUser = function(user) {

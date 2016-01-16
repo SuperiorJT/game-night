@@ -6,6 +6,7 @@ var notify = require('./socket-notifications');
 var users = require('./users');
 var client = require('./db');
 var cache = require('./cache');
+var _ = require('lodash');
 
 module.exports = function(io) {
     io.on('connection', function(socket) {
@@ -31,15 +32,15 @@ module.exports = function(io) {
                     reply.rank = JSON.parse(reply.rank);
                     reply.session = JSON.parse(reply.session);
                     if (reply.session != cache.session.id) {
-                        reply.session = 0;
+                        reply.session = null;
                     }
                     reply.admin = JSON.parse(reply.admin);
                     reply.lobby = JSON.parse(reply.lobby);
-                    var roundAvailable = cache.rounds.filter(function(val) {
+                    var roundAvailable = _.filter(cache.rounds, function(val) {
                         return val.id == reply.lobby;
                     })[0];
                     if (!roundAvailable) {
-                        reply.lobby = 0;
+                        reply.lobby = null;
                     }
                     if (!reply.avatar) {
                         reply.avatar = 0;
@@ -50,7 +51,7 @@ module.exports = function(io) {
                     reply.online = true;
                     reply.sid = socket.id;
                     delete reply.password;
-                    cache.users.push(reply);
+                    cache.users[reply.id] = reply;
                     users.updateState(reply.id, true, reply.session, reply.lobby);
                     console.log(reply.username + " has joined the server!");
                     var sessionAvailable = false;
@@ -58,7 +59,6 @@ module.exports = function(io) {
                         sessionAvailable = true;
                     }
                     socket.emit('logged in', { user: reply, session: sessionAvailable });
-                    notify.neutral(io, reply.username + " joined the game night server!", null);
                 } else {
                     socket.emit('login failed', null);
                     notify.fail(socket, "Your local account data is invalid. Please login again.", null);
@@ -67,31 +67,14 @@ module.exports = function(io) {
         });
 
         socket.on('disconnect', function() {
-            console.log(socket.request.connection.remoteAddress + " has disconnected to the server. id: " + socket.id);
-            cache.users.some(function(user) {
-                if (user.sid == socket.id) {
-                    var sessionId = null;
-                    if (user.lobby) {
-                        rounds.leave({
-                            id: user.id,
-                            round: user.lobby
-                        }, conn);
+            var user = _.find(cache.users, {'sid': socket.id});
+            if (user) {
+                setTimeout(function() {
+                    if (user.sid == socket.id) {
+                        delete cache.users[user.id];
                     }
-                    if (user.session) {
-                        sessions.leave({
-                            id: user.id
-                        }, conn);
-                        sessionId = 0;
-                    }
-                    users.updateState(user.id, false, sessionId, null);
-                    cache.users = cache.users.filter(function(val) {
-                        return val.id != user.id;
-                    });
-                    console.log(user.username + " has left the server!");
-                    io.emit('users updated', user.username + "left the game night server!");
-                    return true;
-                }
-            });
+                }, 1000 * 60 * 30);
+            }
         });
 
         socket.on('reconnect', function() {
@@ -115,9 +98,7 @@ module.exports = function(io) {
                 sessionId = 0;
             }
             users.updateState(user.id, false, sessionId, round);
-            cache.users = cache.users.filter(function(val) {
-                return val.id != user.id;
-            });
+            delete cache.users[user.id];
             console.log(user.username + " has left the server!");
             socket.emit('logged out');
             io.emit('users updated', user.username + "left the game night server!");
@@ -139,9 +120,7 @@ module.exports = function(io) {
 
         socket.on('fetch all', function() {
             if (cache.session.id) {
-                socket.emit('receive users', cache.users.filter(function(val) {
-                    return val.session == cache.session.id;
-                }));
+                socket.emit('receive users', _.filter(cache.users, {'session': cache.session.id}));
             }
             socket.emit('receive rounds', cache.rounds);
             games.emitGames(conn);

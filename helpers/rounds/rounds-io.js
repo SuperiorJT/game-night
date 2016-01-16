@@ -3,13 +3,12 @@ var client = require('../db');
 var notify = require('../socket-notifications');
 var cache = require('../cache');
 var users = require('../users');
+var _ = require('lodash');
 
 module.exports.init = function(conn) {
 
     conn.socket.on('round create', function(data) {
-        var user = cache.users.filter(function(val) {
-            return val.id == data.id;
-        })[0];
+        var user = cache.users[data.id];
         if (user.admin) {
             data.data.admin = user.id;
             rounds.create(data.data, function(err, reply) {
@@ -40,10 +39,8 @@ module.exports.init = function(conn) {
                 conn.socket.emit('round joined', reply);
                 conn.socket.join('round room ' + data.round);
                 conn.io.to('round room ' + data.round).emit('round users updated', reply);
-                var username = cache.users.filter(function(val) {
-                    return val.id == data.id;
-                })[0].username;
-                notify.neutral(conn.io.to('round room ' + cache.session.id), username + " has joined the lobby!")
+                var username = cache.users[data.id].username;
+                notify.neutral(conn.io.to('round room ' + cache.session.id), username + " has joined the lobby!");
             }
         });
     });
@@ -53,9 +50,7 @@ module.exports.init = function(conn) {
     });
 
     conn.socket.on('round start', function(data) {
-        var user = cache.users.filter(function(val) {
-            return val.id == data.id;
-        })[0];
+        var user = cache.users[data.id];
         if (user.admin) {
             rounds.start(data, function(reply) {
                 if (reply.error) {
@@ -71,9 +66,7 @@ module.exports.init = function(conn) {
     });
 
     conn.socket.on('round finish', function(data) {
-        var user = cache.users.filter(function(val) {
-            return val.id == data.id;
-        })[0];
+        var user = cache.users[data.id];
         if (user.admin) {
             rounds.finish(data, function(reply) {
                 if (reply.error) {
@@ -82,30 +75,26 @@ module.exports.init = function(conn) {
                 } else {
                     conn.io.to('round room ' + data.round).emit('round finished', reply);
                     setTimeout(function() {
-                        cache.rounds.some(function(round, index, array) {
-                            if (round.id == data.round) {
-                                if (round.winners.length < round.users.length) {
-                                    round.users.forEach(function(val) {
-                                        var user = round.winners.filter(function(winnerVal) {
-                                            return winnerVal.user.id == val.id;
-                                        })[0];
-                                        if (!user) {
-                                            cache.rounds[index].winners.push({
-                                                user: val,
-                                                place: cache.rounds[index].users.length
-                                            });
-                                        }
-                                    });
-                                }
-                                conn.io.to('round room ' + data.round).emit('round claimed complete', reply);
-                                return true;
-                            } else {
-                                return false;
+                        var round = cache.rounds[data.round];
+                        if (round) {
+                            if (round.winners.length < round.users.length) {
+                                round.users.forEach(function(val) {
+                                    var user = round.winners.filter(function(winnerVal) {
+                                        return winnerVal.user.id == val.id;
+                                    })[0];
+                                    if (!user) {
+                                        cache.rounds[round.id].winners.push({
+                                            user: val,
+                                            place: cache.rounds[round.id].users.length
+                                        });
+                                    }
+                                });
                             }
-                        });
+                            conn.io.to('round room ' + data.round).emit('round claimed complete', reply);
+                        }
                     }, 30000);
                 }
-            })
+            });
         } else {
             notify.fail(conn.socket, "You are not authorized to finish a round", null);
         }
@@ -161,9 +150,7 @@ module.exports.init = function(conn) {
     });
 
     conn.socket.on('round close', function(data) {
-        var user = cache.users.filter(function(val) {
-            return val.id == data.id;
-        })[0];
+        var user = _.find(cache.users, {'id': data.id});
         if (user.admin) {
             roundClose(data);
         } else {
@@ -172,13 +159,10 @@ module.exports.init = function(conn) {
     });
 
     conn.socket.on('fetch round', function(data) {
-        var round = cache.rounds.filter(function(val) {
-            return val.id == data.round;
-        })[0];
+        var round = _.find(cache.rounds, {'id': data.round});
         if (round) {
             conn.socket.emit('receive round', round);
         }
-
     });
 
     conn.socket.on('fetch rounds', function(data) {
@@ -194,19 +178,14 @@ var roundLeave = function(data, conn) {
             conn.socket.emit('round leave failed', null);
         } else {
             var round = reply;
-            cache.rounds.some(function(round, index) {
-                if (round.id == data.round) {
-                    conn.socket.emit('round left', round);
-                    conn.io.to('round room ' + round.id).emit('round users updated', round);
-                    conn.socket.leave('round room ' + round.id);
-                    if (round.admin.id == data.id) {
-                        roundClose(data, conn);
-                    }
-                    return true;
-                } else {
-                    return false;
+            if (round) {
+                conn.socket.emit('round left', round);
+                conn.io.to('round room ' + round.id).emit('round users updated', round);
+                conn.socket.leave('round room ' + round.id);
+                if (round.admin.id == data.id) {
+                    roundClose(data, conn);
                 }
-            });
+            }
         }
     });
 };
@@ -218,7 +197,7 @@ var roundClose = function(data, conn) {
             conn.socket.emit('round close failed', null);
         } else {
             client.hgetall('round:' + data.round, function(err, reply) {
-                cache.users.forEach(function(val) {
+                _.forEach(cache.users, function(val) {
                     conn.io.sockets.connected[val.sid].leave('round room ' + data.round);
                 });
                 conn.io.to('session room ' + cache.session.id).emit('round closed', cache.rounds);

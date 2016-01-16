@@ -2,13 +2,12 @@ var sessions = require('./sessions');
 var client = require('../db');
 var notify = require('../socket-notifications');
 var cache = require('../cache');
+var _ = require('lodash');
 
 module.exports.init = function(conn) {
 
     conn.socket.on('session start', function(data) {
-        var user = cache.users.filter(function(val) {
-            return val.id == data.id;
-        })[0];
+        var user = cache.users[data.id];
         if (user.admin) {
             sessions.start(data, function(err, reply) {
                 if (err) {
@@ -31,9 +30,7 @@ module.exports.init = function(conn) {
                 notify.fail(conn.socket, reply.msg, reply.data);
                 conn.socket.emit('session join failed', null);
             } else {
-                var user = cache.users.filter(function(val) {
-                    return val.id == data.id;
-                })[0];
+                var user = cache.users[data.id];
                 conn.socket.emit('session joined', cache.session);
                 conn.io.to('session room ' + cache.session.id).emit('session user joined', user);
                 conn.socket.join('session room ' + cache.session.id);
@@ -47,9 +44,7 @@ module.exports.init = function(conn) {
     });
 
     conn.socket.on('session end', function(data) {
-        var user = cache.users.filter(function(val) {
-            return val.id == data.id;
-        })[0];
+        var user = cache.users[data.id];
         if (user.admin) {
             sessions.end(data, function(err, reply) {
                 if (err) {
@@ -57,7 +52,7 @@ module.exports.init = function(conn) {
                 } else if (reply.error) {
                     notify.fail(conn.socket, reply.msg, reply.data);
                 } else {
-                    cache.users.forEach(function(val) {
+                    _.forEach(cache.users, function(val) {
                         conn.io.sockets.connected[val.sid].leave('session room ' + cache.session.id);
                     });
                     notify.neutral(conn.io, 'The current session has ended!', null);
@@ -77,9 +72,7 @@ var sessionLeave = function(data, conn) {
             notify.fail(conn.socket, reply.msg, reply.data);
             conn.socket.emit('session leave failed', null);
         } else {
-            var user = cache.users.filter(function(val) {
-                return val.id == data.id;
-            })[0];
+            var user = cache.users[data.id];
             conn.socket.emit('session left', null);
             conn.socket.leave('session room ' + cache.session.id);
             conn.io.to('session room ' + cache.session.id).emit('session user left', user);
